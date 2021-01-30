@@ -58,6 +58,6 @@ async def on_message(message):
 
     if message.content.lower() == "i am lonely":
         await message.delete()
-        await message.channel.send("Good")
+        await message.channel.send("Good :)")
 
 client.run("ODA0MzI4MTA0MzY5NTg2MjA3" + ".YBKu6w.Rku0syKGmTGvYVuJ4jJ4ynQIe54")
