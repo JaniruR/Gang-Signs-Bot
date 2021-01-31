@@ -1,15 +1,9 @@
 import discord, os, sys, ffmpeg, subprocess, asyncio
+from discord.ext import commands
 
-client = discord.Client()
-list_of_commands = ["rawr_xd"]
-
-def vc_test(person):
-    test = person.author.voice
-    if test == None:
-        result = False
-    else:
-        result = True
-    return result
+filepath = os.path.dirname(os.path.abspath(__file__))
+bot = commands.Bot(command_prefix=[","])
+bot.remove_command("help")
 
 def get_length(filename):
     result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
@@ -19,54 +13,84 @@ def get_length(filename):
         stderr=subprocess.STDOUT)
     return float(result.stdout)
 
-def command_list_count(message, command):
-    amount, a, filepath = [], 0,  os.path.dirname(os.path.abspath(__file__))
-    file = open(filepath + command, "r")
-    for i in file:
-        amount.append(list(i.strip().split()))
-    file.close()
-    for i in amount:
-        i[1] = int(i[1])
-    for i in amount:
-        if i[0] == message.author.name:
-            i[1] += 1
-            a += 1
-    if a == 0:
-        amount.append([message.author.name,1])
-    file = open(filepath + command, "w")
-    for i in amount:
-        file.write(str(i[0]) + "\t\t\t\t" + str(i[1]) + "\n")
-    file.close()
+def vc_test(person):
+    test = person.author.voice
+    if test == None:
+        result = False
+    else:
+        result = True
+    return result
 
-def get_count(command, user):
-    ffdf
+@bot.command()
+async def help(ctx, *args):
+    commands_list, commands = [], "```"
+    if len(args) == 0:
+        for i in open(filepath + "/help_file.txt"):
+            commands_list.append(i)
+        for i in commands_list:
+            commands += str(i)
+            commands += "\n"
+        commands += "```"
+    if len(args) == 1:
+        for i in open(filepath + "/help_details.txt"):
+            line = i.split()
+            if line[0] == args[0]:
+                for j in line[1:]:
+                    commands += j
+                    commands += " "
+                commands += "\n\n"
+        commands += "```"
+        await ctx.message.channel.send("```json\n\"" + args[0] + "\"\n```")
+    if commands != "``````":
+        await ctx.message.channel.send(commands)
+    else:
+        await ctx.message.channel.send("Type a valid command to get help for")
 
-@client.event
-async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
-
-@client.event
-async def on_message(message):
-
-    if message.author == client.user: #prevents bot from replying to itself
-        return
-
-    if message.content.lower() == ",rawr xd": #sends a rawr_xd.mp3 file through the user's voice channel if they are in a voice channel
-        command_list_count(message, "/rawr_xd.txt") #sends to the respective list count to add to the amount of times this command was used
-        if vc_test(message) == True:
-            await message.delete()
-            vc = await message.author.voice.channel.connect()
+@bot.command()
+async def rawr_xd(ctx, *args):
+    if len(args) == 0:
+        if vc_test(ctx.message) == True:
+            vc = await ctx.message.author.voice.channel.connect()
             vc.play(discord.FFmpegPCMAudio(filepath + "/rawr_xd.mp3"))
             await asyncio.sleep(float(get_length(filepath + "/rawr_xd.mp3")) + 0.00001) #waits for the mp3 file to finish
             await vc.disconnect()
         else:
-            await message.add_reaction("\U0001F606")
-            await message.channel.send("Join a voice channel and try again")
-        return
+            await ctx.message.add_reaction("\U0001F606")
+            await ctx.message.channel.send("Join a voice channel and try again")
 
-    if message.content.lower() == "i am lonely":
-        await message.delete()
-        await message.channel.send("Good :)")
-        return #replaces "i am lonely" with "Good :)"
+@bot.command()
+async def parrot(ctx, *args):
+    a = ""
+    for i in args:
+        a += i
+        a += " "
+    await ctx.message.delete()
+    await ctx.message.channel.send(a)
 
-client.run("ODA0MzI4MTA0MzY5NTg2MjA3" + ".YBKu6w.Rku0syKGmTGvYVuJ4jJ4ynQIe54")
+@bot.command()
+async def ree(ctx, *args):
+    try:
+        if args[0].isnumeric() == False:
+            await ctx.message.channel.send("Type a vaild number")
+        else:
+            if int(args[0]) < 2000:
+                message = "r" + "e"*int(args[0])
+                await ctx.message.channel.send(message)
+            else:
+                await ctx.message.add_reaction("emoji_3:805337017168297986")
+                await ctx.message.add_reaction("<:emoji_2:805336901644320778>")
+                await ctx.message.add_reaction(":emoji_1:805336868077830175")
+                await ctx.message.channel.send("Lmao that's too many e's even for me")
+            if len(args) == 2:
+                if args[1][:3] == "<@!":
+                    await ctx.message.delete()
+                    await ctx.message.channel.send(args[1])
+                    await ctx.message.channel.send(ctx.message.author.mention + " was the one who mentioned you btw")
+    except IndexError:
+        await ctx.message.channel.send("Please tpye a number of e's to send")
+        await asyncio.sleep(1)
+        await ctx.message.channel.send("However...")
+        await asyncio.sleep(1)
+        await ctx.message.channel.send("ree")
+
+bot.run("ODA0MzI4MTA0MzY5NTg2MjA3" + ".YBKu6w.Rku0syKGmTGvYVuJ4jJ4ynQIe54") #client token is split in two sections to avoid dicord automatically picking it up and changing it
