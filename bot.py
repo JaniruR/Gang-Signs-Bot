@@ -196,6 +196,7 @@ async def on_message(message):
                 await message.channel.send("Please finish typing all of the details")
             else:
                 await announcement.send(final_deets + "\n" + "@everyone")
+                os.remove(filepath + "/events_" + str(message.author) + ".txt")
 
     if message.guild != None:
         await bot.process_commands(message)

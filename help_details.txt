@@ -3,3 +3,4 @@ rawr_xd Will play rawr_xd.mp3 in the voice channel that you are in (if you are i
 rawr_xd This audio file was obtained through the use of Google's Text-To-Speech engine.
 ree Puts in the amount of e's for a ree
 ree You can also mention someone like this (,ree 2 <@mention) to mention them after the ree has been sent
+event after the bot creates a dm with you, it will walk you through how to create an event
