@@ -188,7 +188,7 @@ async def on_message(message):
         if message.content.lower() == "send event":
             final_deets = ""
             deets_count = []
-            announcement = bot.get_channel(805349780124991499)
+            announcement = bot.get_channel(723788723380289537)
             for i in open(filepath + "/events_" + str(message.author) + ".txt"):
                 final_deets += i
                 deets_count.append(i)
