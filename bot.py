@@ -197,7 +197,7 @@ async def speak(ctx, *args):
         return
     else:
         try:
-            gTTS(speech).save(filepath + "\message.mp3")
+            gTTS(speech).save(filepath + "/message.mp3")
             vc = await ctx.author.voice.channel.connect()
             vc.play(discord.FFmpegPCMAudio(filepath + "\message.mp3"))
             await asyncio.sleep(float(get_length(filepath + "\message.mp3")) + 0.0001)
