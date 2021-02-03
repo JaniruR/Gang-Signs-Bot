@@ -292,9 +292,9 @@ async def on_message(message):
             await asyncio.sleep(1)
             pog = await message.channel.send("Poggers")
             await pog.add_reaction(":poggers:806108825018695681")
-            await message.add_reaction("\U0001F1F5")
-            await message.add_reaction("\U0001F1F4")
-            await message.add_reaction("\U0001F1EC")
+            await pog.add_reaction("\U0001F1F5")
+            await pog.add_reaction("\U0001F1F4")
+            await pog.add_reaction("\U0001F1EC")
         if "poggers" in message.content.lower() or "pog" in message.content.lower():
              await message.add_reaction(":poggers:806108825018695681")
              await message.add_reaction("\U0001F1F5")
@@ -303,9 +303,9 @@ async def on_message(message):
              await asyncio.sleep(1)
              pog = await message.channel.send("Poggers")
              await pog.add_reaction(":poggers:806108825018695681")
-             await message.add_reaction("\U0001F1F5")
-             await message.add_reaction("\U0001F1F4")
-             await message.add_reaction("\U0001F1EC")
+             await pog.add_reaction("\U0001F1F5")
+             await pog.add_reaction("\U0001F1F4")
+             await pog.add_reaction("\U0001F1EC")
              return
         await bot.process_commands(message)
 
