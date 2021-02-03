@@ -272,21 +272,41 @@ async def on_message(message):
         if message.content.lower() == "send event":
             final_deets = ""
             deets_count = []
-            announcement = bot.get_channel(805349780124991499)
+            announcement = bot.get_channel(723788723380289537)
             for i in open(filepath + "/events_" + str(message.author) + ".txt"):
                 final_deets += i
                 deets_count.append(i)
             if len(deets_count) < 3:
                 await message.channel.send("Please finish typing all of the details")
             else:
-                await announcement.send(final_deets + "\n" + "@everyone")
+                announce = await announcement.send(final_deets + "\n" + "@everyone")
+                await announce.add_reaction("\U0001F4C5")
                 os.remove(filepath + "/events_" + str(message.author) + ".txt")
 
     if message.guild != None:
         if "bobby" in message.content.lower():
             await message.add_reaction(":poggers:806108825018695681")
+            await message.add_reaction("\U0001F1F5")
+            await message.add_reaction("\U0001F1F4")
+            await message.add_reaction("\U0001F1EC")
+            await asyncio.sleep(1)
             pog = await message.channel.send("Poggers")
             await pog.add_reaction(":poggers:806108825018695681")
+            await message.add_reaction("\U0001F1F5")
+            await message.add_reaction("\U0001F1F4")
+            await message.add_reaction("\U0001F1EC")
+        if "poggers" in message.content.lower() or "pog" in message.content.lower():
+             await message.add_reaction(":poggers:806108825018695681")
+             await message.add_reaction("\U0001F1F5")
+             await message.add_reaction("\U0001F1F4")
+             await message.add_reaction("\U0001F1EC")
+             await asyncio.sleep(1)
+             pog = await message.channel.send("Poggers")
+             await pog.add_reaction(":poggers:806108825018695681")
+             await message.add_reaction("\U0001F1F5")
+             await message.add_reaction("\U0001F1F4")
+             await message.add_reaction("\U0001F1EC")
+             return
         await bot.process_commands(message)
 
 bot.run("ODA0MzI4MTA0MzY5NTg2MjA3" + ".YBKu6w.Rku0syKGmTGvYVuJ4jJ4ynQIe54") #client token is split in two sections to avoid dicord automatically picking it up and changing it
