@@ -1,4 +1,5 @@
-import discord, os, sys, ffmpeg, subprocess, asyncio, random
+import discord, os, sys, ffmpeg, subprocess, asyncio, random, gtts
+from gtts import gTTS
 from discord.ext import commands
 
 filepath = os.path.dirname(os.path.abspath(__file__))
@@ -25,7 +26,6 @@ def vc_test(person):
 @bot.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(bot))
-    await bot.change_presence(activity=discord.Streaming(name="my GME stock", url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"))
 
 @bot.command()
 async def status(ctx, *args):
@@ -185,6 +185,25 @@ async def timer(ctx, seconds):
 @bot.command()
 async def slur(ctx):
     await ctx.channel.send(random.choice(slurs))
+
+@bot.command()
+async def speak(ctx, *args):
+    speech = ""
+    for i in args:
+        speech += i
+        speech += " "
+    if ctx.voice_client != None:
+        await ctx.message.channel.send("Please wait until i finish speaking")
+        return
+    else:
+        try:
+            gTTS(speech).save(filepath + "\message.mp3")
+            vc = await ctx.author.voice.channel.connect()
+            vc.play(discord.FFmpegPCMAudio(filepath + "\message.mp3"))
+            await asyncio.sleep(float(get_length(filepath + "\message.mp3")) + 0.0001)
+            await vc.disconnect()
+        except AttributeError:
+            await ctx.message.channel.send("Join a voice channel and try again")
 
 @bot.event
 async def on_message(message):
