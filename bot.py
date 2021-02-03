@@ -54,6 +54,8 @@ async def status(ctx, *args):
                 video += i
                 video += " "
             await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=video))
+        if args[0] == "reset":
+            await bot.change_presence(activity = None, status=None)
     else:
         await ctx.channel.send("No")
 
