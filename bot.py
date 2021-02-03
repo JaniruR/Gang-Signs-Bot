@@ -28,6 +28,38 @@ async def on_ready():
     await bot.change_presence(activity=discord.Streaming(name="Your mom", url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"))
 
 @bot.command()
+async def status(ctx, *args):
+    if str(ctx.author) == "xemnas2004#4845":
+        if args[0] == "play":
+            print("play")
+            game = ""
+            for i in args[1:]:
+                game += i
+                game += " "
+                print(game)
+                await bot.change_presence(activity=discord.Game(game))
+                if args[0] == "stream":
+                    stream = ""
+                    for i in args[1:-1]:
+                        stream += i
+                        stream += " "
+                        await bot.change_presence(activity=discord.Streaming(name=stream, url=args[-1]))
+                        if args[0] == "listen":
+                            song = ""
+                            for i in args[1:]:
+                                song += i
+                                song += " "
+                                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=song))
+                                if args[0] == "watch":
+                                    video = ""
+                                    for i in args[1:]:
+                                        video += i
+                video += " "
+                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=video))
+    else:
+        await ctx.channel.send("No")
+
+@bot.command()
 async def help(ctx, *args):
     commands_list, commands = [], "```"
     if len(args) == 0:
@@ -62,7 +94,20 @@ async def rawr_xd(ctx, *args):
             await vc.disconnect()
         else:
             await ctx.message.add_reaction("\U0001F606")
-            await ctx.message.channel.send("Join a voice channel and try again")
+            rawr = await ctx.message.channel.send("Join a voice channel and try again")
+            await asyncio.sleep(0.1)
+            await ctx.message.add_reaction(":emoji_3:805337017168297986")
+            await ctx.message.add_reaction("\U0001F1E6")
+            await ctx.message.add_reaction("\U0001F1FC")
+            await ctx.message.add_reaction("\U0001F1F7")
+            await ctx.message.add_reaction("\U0001F1FD")
+            await ctx.message.add_reaction("\U0001F1E9")
+            await rawr.add_reaction(":emoji_3:805337017168297986")
+            await rawr.add_reaction("\U0001F1E6")
+            await rawr.add_reaction("\U0001F1FC")
+            await rawr.add_reaction("\U0001F1F7")
+            await rawr.add_reaction("\U0001F1FD")
+            await rawr.add_reaction("\U0001F1E9")
 
 @bot.command()
 async def parrot(ctx, *args):
@@ -77,7 +122,6 @@ async def parrot(ctx, *args):
     repeat = await ctx.message.channel.send(a)
     if b == 1:
         await repeat.add_reaction(":poggers:806108825018695681")
-
 
 @bot.command()
 async def ree(ctx, *args):
@@ -98,7 +142,10 @@ async def ree(ctx, *args):
                     await ctx.message.delete()
                     await asyncio.sleep(1)
                     await ctx.message.channel.send(args[1])
-                    await ctx.message.channel.send(ctx.message.author.mention + " was the one who mentioned you btw")
+                    if ctx.message.author != "xemnas2004#4845":
+                        if random.choice(["0","1"]) != "0":
+                            await ctx.message.channel.send(ctx.message.author.mention + " was the one who mentioned you btw")
+
     except IndexError:
         await ctx.message.channel.send("Please type a number of e's to send")
         await asyncio.sleep(1)
