@@ -1,9 +1,10 @@
-import discord, os, sys, ffmpeg, subprocess, asyncio
+import discord, os, sys, ffmpeg, subprocess, asyncio, random
 from discord.ext import commands
 
 filepath = os.path.dirname(os.path.abspath(__file__))
 bot = commands.Bot(command_prefix=[","])
 bot.remove_command("help")
+slurs = ["Turbinator", "Pinunderjip", "Kuthi", "Macaca", "Kalu", "Ganesh"]
 
 def get_length(filename):
     result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
@@ -24,6 +25,7 @@ def vc_test(person):
 @bot.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(bot))
+    await bot.change_presence(activity=discord.Streaming(name="Your mom", url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"))
 
 @bot.command()
 async def help(ctx, *args):
@@ -68,8 +70,14 @@ async def parrot(ctx, *args):
     for i in args:
         a += i
         a += " "
+    if "bobby" in ctx.message.content.lower():
+        b = 1
     await ctx.message.delete()
-    await ctx.message.channel.send(a)
+    await asyncio.sleep(1)
+    repeat = await ctx.message.channel.send(a)
+    if b == 1:
+        await repeat.add_reaction(":poggers:806108825018695681")
+
 
 @bot.command()
 async def ree(ctx, *args):
@@ -86,7 +94,7 @@ async def ree(ctx, *args):
                 await ctx.message.add_reaction(":emoji_1:805336868077830175")
                 await ctx.message.channel.send("Lmao that's too many e's even for me")
             if len(args) == 2:
-                if args[1][:3] == "<@!":
+                if args[1][:2] == "<@":
                     await ctx.message.delete()
                     await asyncio.sleep(1)
                     await ctx.message.channel.send(args[1])
@@ -104,6 +112,32 @@ async def event(ctx, *args):
     await dm.send("Type \"event\" in this dm to start creation of an event")
     await asyncio.sleep(1)
     await dm.send("For future reference, you can initiate this command straight from the dm next time")
+
+@bot.command()
+async def timer(ctx, seconds):
+    try:
+        secondint = int(seconds)
+        if secondint > 300:
+            await ctx.send("I dont think im allowed to do go above 300 seconds.")
+            raise BaseException
+        if secondint <= 0:
+            await ctx.send("I dont think im allowed to do negatives")
+            raise BaseException
+        message = await ctx.send("Timer: {seconds}")
+        while True:
+            secondint -= 1
+            if secondint == 0:
+                await message.edit(content="Ended!")
+                break
+            await message.edit(content=f"Timer: {secondint}")
+            await asyncio.sleep(1)
+        await ctx.send(f"{ctx.author.mention} Your countdown Has ended!")
+    except ValueError:
+        await ctx.send("Must be a number!")
+
+@bot.command()
+async def slur(ctx):
+    await ctx.channel.send(random.choice(slurs))
 
 @bot.event
 async def on_message(message):
@@ -156,8 +190,10 @@ async def on_message(message):
                 details.append(i)
             if len(details) == 0:
                 await message.channel.send("Lmao you haven't even started the process, don't think I'm going to let you have the chance to break me")
+                return
             if len(details) == 1:
                 await message.channel.send("You forgot to do a summary of the events. To add a summary type \"summary: \" followed by a summary (type it in one line please)")
+                return
             time = message.content[6:]
             await message.channel.send("This is the date and time that you have input")
             await asyncio.sleep(0.5)
@@ -169,11 +205,14 @@ async def on_message(message):
             file.close()
             await message.channel.send("Type \"details\" to see details about the event")
 
-
         if message.content.lower() == "details":
             deets = []
-            for i in open(filepath + "/events_" + str(message.author) + ".txt"):
-                deets.append(i)
+            try:
+                for i in open(filepath + "/events_" + str(message.author) + ".txt"):
+                    deets.append(i)
+            except FileNotFoundError:
+                await message.channel.send("You haven't even started yet smh")
+                return
             if len(deets) == 3:
                 await message.channel.send("Event name: " + deets[0].lower())
                 await asyncio.sleep(1)
@@ -181,14 +220,14 @@ async def on_message(message):
                 await asyncio.sleep(1)
                 await message.channel.send("Time and date: " + deets[2])
                 await asyncio.sleep(2)
-                await message.channel.send("If these details are correct, type \"send event\" to send the event to the announcements tab")
-            else:
-                await message.channel.send("Please finish typing all of the details")
+                await message.channel.send("Make sure these details are correct")
+                await asyncio.sleep(1)
+                await message.channel.send("type \"send event\" to send this event to the announcements tab")
 
         if message.content.lower() == "send event":
             final_deets = ""
             deets_count = []
-            announcement = bot.get_channel(723788723380289537)
+            announcement = bot.get_channel(805349780124991499)
             for i in open(filepath + "/events_" + str(message.author) + ".txt"):
                 final_deets += i
                 deets_count.append(i)
@@ -199,6 +238,10 @@ async def on_message(message):
                 os.remove(filepath + "/events_" + str(message.author) + ".txt")
 
     if message.guild != None:
+        if "bobby" in message.content.lower():
+            await message.add_reaction(":poggers:806108825018695681")
+            pog = await message.channel.send("Poggers")
+            await pog.add_reaction(":poggers:806108825018695681")
         await bot.process_commands(message)
 
 bot.run("ODA0MzI4MTA0MzY5NTg2MjA3" + ".YBKu6w.Rku0syKGmTGvYVuJ4jJ4ynQIe54") #client token is split in two sections to avoid dicord automatically picking it up and changing it
