@@ -199,8 +199,8 @@ async def speak(ctx, *args):
         try:
             gTTS(speech).save(filepath + "/message.mp3")
             vc = await ctx.author.voice.channel.connect()
-            vc.play(discord.FFmpegPCMAudio(filepath + "\message.mp3"))
-            await asyncio.sleep(float(get_length(filepath + "\message.mp3")) + 0.0001)
+            vc.play(discord.FFmpegPCMAudio(filepath + "/message.mp3"))
+            await asyncio.sleep(float(get_length(filepath + "/message.mp3")) + 0.0001)
             await vc.disconnect()
         except AttributeError:
             await ctx.message.channel.send("Join a voice channel and try again")
