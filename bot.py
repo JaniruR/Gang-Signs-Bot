@@ -25,37 +25,35 @@ def vc_test(person):
 @bot.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(bot))
-    await bot.change_presence(activity=discord.Streaming(name="Your mom", url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"))
+    await bot.change_presence(activity=discord.Streaming(name="my GME stock", url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"))
 
 @bot.command()
 async def status(ctx, *args):
     if str(ctx.author) == "xemnas2004#4845":
         if args[0] == "play":
-            print("play")
             game = ""
             for i in args[1:]:
                 game += i
                 game += " "
-                print(game)
                 await bot.change_presence(activity=discord.Game(game))
-                if args[0] == "stream":
-                    stream = ""
-                    for i in args[1:-1]:
-                        stream += i
-                        stream += " "
-                        await bot.change_presence(activity=discord.Streaming(name=stream, url=args[-1]))
-                        if args[0] == "listen":
-                            song = ""
-                            for i in args[1:]:
-                                song += i
-                                song += " "
-                                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=song))
-                                if args[0] == "watch":
-                                    video = ""
-                                    for i in args[1:]:
-                                        video += i
+        if args[0] == "stream":
+            stream = ""
+            for i in args[1:-1]:
+                stream += i
+                stream += " "
+            await bot.change_presence(activity=discord.Streaming(name=stream, url=args[-1]))
+        if args[0] == "listen":
+            song = ""
+            for i in args[1:]:
+                song += i
+                song += " "
+            await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=song))
+        if args[0] == "watch":
+            video = ""
+            for i in args[1:]:
+                video += i
                 video += " "
-                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=video))
+            await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=video))
     else:
         await ctx.channel.send("No")
 
