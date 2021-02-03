@@ -7,3 +7,4 @@ ree Sends a ree with the amount of e'syou specify and then deletes your command 
 ree You can also mention someone like this (,ree 2 <@mention) to mention them after the ree has been sent
 ree If you mention a person to include them in said ree, there is a random chance that you are exposed for your actions
 timer Enter a number and a timer for that amount of seconds will be initiated
+help Bruh its just help, are you actually stupid?
