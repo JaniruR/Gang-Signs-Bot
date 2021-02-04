@@ -9,3 +9,4 @@ ree If you mention a person to include them in said ree, there is a random chanc
 timer Enter a number and a timer for that amount of seconds will be initiated
 help Bruh its just help, are you actually stupid?
 speak If you are in a voice channel, the bot will join your voice channel, say what you tell it to say and then leave
+speak Do note that rawr xd from this command is different to rawr xd from rawr_xd

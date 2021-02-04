@@ -87,6 +87,9 @@ async def help(ctx, *args):
 @bot.command()
 async def rawr_xd(ctx, *args):
     if len(args) == 0:
+        if len(ctx.bot.voice_clients) == 0:
+            await ctx.message.channel.send("Please wait for me to finish speaking")
+            return
         if vc_test(ctx.message) == True:
             vc = await ctx.message.author.voice.channel.connect()
             vc.play(discord.FFmpegPCMAudio(filepath + "/rawr_xd.mp3"))
@@ -94,7 +97,7 @@ async def rawr_xd(ctx, *args):
             await vc.disconnect()
         else:
             await ctx.message.add_reaction("\U0001F606")
-            rawr = await ctx.message.channel.send("Join a voice channel and try again")
+            await ctx.message.channel.send("Join a voice channel and try again")
             await asyncio.sleep(0.1)
             await ctx.message.add_reaction(":emoji_3:805337017168297986")
             await ctx.message.add_reaction("\U0001F1E6")
@@ -102,12 +105,6 @@ async def rawr_xd(ctx, *args):
             await ctx.message.add_reaction("\U0001F1F7")
             await ctx.message.add_reaction("\U0001F1FD")
             await ctx.message.add_reaction("\U0001F1E9")
-            await rawr.add_reaction(":emoji_3:805337017168297986")
-            await rawr.add_reaction("\U0001F1E6")
-            await rawr.add_reaction("\U0001F1FC")
-            await rawr.add_reaction("\U0001F1F7")
-            await rawr.add_reaction("\U0001F1FD")
-            await rawr.add_reaction("\U0001F1E9")
 
 @bot.command()
 async def parrot(ctx, *args):
@@ -192,18 +189,17 @@ async def speak(ctx, *args):
     for i in args:
         speech += i
         speech += " "
-    if ctx.voice_client != None:
-        await ctx.message.channel.send("Please wait until i finish speaking")
+    if len(ctx.bot.voice_clients) != 0:
+        await ctx.message.channel.send("Please wait for me to finish speaking")
         return
-    else:
-        try:
-            gTTS(speech).save(filepath + "/message.mp3")
-            vc = await ctx.author.voice.channel.connect()
-            vc.play(discord.FFmpegPCMAudio(filepath + "/message.mp3"))
-            await asyncio.sleep(float(get_length(filepath + "/message.mp3")) + 0.0001)
-            await vc.disconnect()
-        except AttributeError:
-            await ctx.message.channel.send("Join a voice channel and try again")
+    try:
+        gTTS(speech).save(filepath + "\message.mp3")
+        vc = await ctx.author.voice.channel.connect()
+        vc.play(discord.FFmpegPCMAudio(filepath + "\message.mp3"))
+        await asyncio.sleep(float(get_length(filepath + "\message.mp3")) + 0.0001)
+        await vc.disconnect()
+    except AttributeError:
+        await ctx.message.channel.send("Join a voice channel and try again")
 
 @bot.event
 async def on_message(message):
