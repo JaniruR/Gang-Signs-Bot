@@ -207,6 +207,7 @@ async def delete(ctx):
     if ctx.channel.category == bot.get_channel(807625442273263647):
         events = []
         roles = []
+        role_thing = []
         role_names = []
         ids = []
         channel_name = ctx.message.channel
@@ -220,9 +221,17 @@ async def delete(ctx):
         for i in ids:
             roles.append(ctx.guild.get_role(i[1]))
         for i in roles:
-            print(i)
-            if str(i) == str(ctx.message.channel):
-                await i.delete()
+            role_thing.append(str(i).split(" "))
+        for i in role_thing:
+            word = ""
+            for j in i:
+                word += j.lower()
+                word += "-"
+            role_names.append(word[:-1])
+        print(role_names)
+        for i in role_names:
+            if str(i).lower() == str(ctx.message.channel):
+                await roles[role_names.index(i)].delete()
                 await ctx.message.channel.delete()
     else:
         await ctx.message.channel.send("Lmao you can't delete this channel")
