@@ -57,6 +57,11 @@ async def status(ctx, *args):
             await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=video))
         if args[0] == "reset":
             await bot.change_presence(activity = None, status=None)
+        if args[0] == "text":
+            status = ""
+            for i in args[1:]:
+                status += i
+            await bot.change_presence(activity = None, status = Status)
     else:
         await ctx.channel.send("No")
 
@@ -179,7 +184,7 @@ async def timer(ctx, seconds):
 async def slur(ctx):
     await ctx.channel.send(random.choice(["Turbinator", "Pinunderjip", "Kuthi", "Macaca", "Kalu", "Ganesh"]))
 
-@bot.command() #speaks your word/phras aloud
+@bot.command() #speaks your word/phrase aloud
 async def speak(ctx, *args):
     speech = ""
     for i in args:
@@ -189,10 +194,10 @@ async def speak(ctx, *args):
         await ctx.send("Please wait for me to finish speaking")
         return
     try:
-        gTTS(speech).save(filepath + "\message.mp3")
+        gTTS(speech).save("message.mp3")
         vc = await ctx.author.voice.channel.connect()
-        vc.play(discord.FFmpegPCMAudio(filepath + "\message.mp3"))
-        await asyncio.sleep(float(get_length(filepath + "\message.mp3")) + 0.0001)
+        vc.play(discord.FFmpegPCMAudio("message.mp3"))
+        await asyncio.sleep(float(get_length("message.mp3")) + 0.0001)
         await vc.disconnect()
     except AttributeError:
         await ctx.send("Join a voice channel and try again")
