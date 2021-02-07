@@ -8,7 +8,7 @@ filepath = os.path.dirname(os.path.abspath(__file__))
 bot = commands.Bot(command_prefix=[","])
 bot.remove_command("help")
 
-def get_length(filename):
+def get_length(filename): #gets the length of an mp3 file
     result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
                              "format=duration", "-of",
                              "default=noprint_wrappers=1:nokey=1", filename],
@@ -16,7 +16,7 @@ def get_length(filename):
         stderr=subprocess.STDOUT)
     return float(result.stdout)
 
-def vc_test(person):
+def vc_test(person): #tests if the person doing the command is in a voice channel
     test = person.author.voice
     if test == None:
         result = False
@@ -56,39 +56,29 @@ async def status(ctx, *args):
                 video += " "
             await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=video))
         if args[0] == "reset":
-            await bot.change_presence(activity = None, status=None)
-        if args[0] == "text":
-            status = ""
-            for i in args[1:]:
-                status += i
-            await bot.change_presence(activity = None, status = Status)
+            await bot.change_presence(activity=None, status=None)
     else:
         await ctx.channel.send("No")
 
 @bot.command() #help command
 async def help(ctx, *args):
-    commands_list, commands = [], "```"
-    if len(args) == 0: #shows general help list
+    a = 0 #how many lines are in the embed
+    embed = discord.Embed(title="Help", color=random.randint(0,0xffffff)) #creates an embed with a random colour
+    if len(args) == 0: #if no argument is given, will open help_file.txt
         for i in open(filepath + "/help_file.txt"):
-            commands_list.append(i)
-        for i in commands_list:
-            commands += str(i)
-            commands += "\n"
-        commands += "```"
-    if len(args) == 1: #shows specific help list
+            command = i.strip().split(":") #splits each line of help_file.txt into [command: description]
+            embed.add_field(name=str(command[0]), value=str(command[1]), inline=False) #adds each line of the file into the embed
+            a += 1
+    if len(args) == 1: #if an argument is given, will open help_details.txt
         for i in open(filepath + "/help_details.txt"):
-            line = i.split()
-            if line[0] == args[0]:
-                for j in line[1:]:
-                    commands += j
-                    commands += " "
-                commands += "\n\n"
-        commands += "```"
-        await ctx.send("```json\n\"" + args[0] + "\"\n```")
-    if commands != "``````":
-        await ctx.send(commands)
+            command = i.strip().split(":") #splits each line of help_details.txt into [command: description]
+            if command[0] == args[0]: #checks for the command requested
+                embed.add_field(name=str(command[0]), value=str(command[1]), inline=False) #if the command requested is found, will add to the embed
+                a += 1
+    if a != 0:
+        await ctx.send(embed=embed) #sends the embed if there are more than 0 lines
     else:
-        await ctx.send("Type a valid command to get help for")
+        await ctx.send("Please type a valid command") #sends if there are 0 lines, the likely cause of this is that an invalid command was sent as the argument
 
 @bot.command() #send rawr_xd.mp3
 async def rawr_xd(ctx, *args):
@@ -98,7 +88,7 @@ async def rawr_xd(ctx, *args):
             return
         if vc_test(ctx.message) == True:
             vc = await ctx.message.author.voice.channel.connect()
-            vc.play(discord.FFmpegPCMAudio(filepath + "/rawr_xd.mp3"))
+            vc.play(discord.FFmpegPCMAudio(filepath + "/rawr_xd.mp3")) #plays the audio through FFmpeg
             await asyncio.sleep(float(get_length(filepath + "/rawr_xd.mp3")) + 0.00001) #waits for the mp3 file to finish
             await vc.disconnect()
         else:
@@ -120,7 +110,7 @@ async def parrot(ctx, *args):
         a += " "
     await ctx.message.delete()
     await asyncio.sleep(1)
-    repeat = await ctx.message.channel.send(a)
+    await ctx.message.channel.send(a)
 
 @bot.command() #sends a ree
 async def ree(ctx, *args):
@@ -141,10 +131,10 @@ async def ree(ctx, *args):
                     await ctx.message.delete()
                     await asyncio.sleep(1)
                     await ctx.send(args[1])
-                    if ctx.author != "xemnas2004#4845":
-                        if random.choice(["0","1"]) != "0":
+                    if ctx.author != "xemnas2004#4845": #will not expose @xemnas2004#4845
+                        if random.choice(["0","1"]) != "0": #if the user is not @xemnas2004#4845, will have a 50% chance of being exposed
                             await ctx.send(ctx.author.mention + " was the one who mentioned you btw")
-    except IndexError:
+    except IndexError: #an argument was not supplied
         await ctx.send("Please type a number of e's to send")
         await asyncio.sleep(1)
         await ctx.send("However...")
@@ -152,8 +142,8 @@ async def ree(ctx, *args):
         await ctx.send("ree")
 
 @bot.command() #creates a dm with you
-async def event(ctx, *args):
-    dm = await ctx.message.author.create_dm()
+async def create_dm(ctx, *args):
+    dm = await ctx.message.author.create_dm() #creates the dm
     await dm.send("Type \"event\" in this dm to start creation of an event")
     await asyncio.sleep(1)
     await dm.send("For future reference, you can initiate this command straight from the dm next time")
@@ -175,7 +165,7 @@ async def timer(ctx, seconds):
                 await message.edit(content="Ended!")
                 break
             await message.edit(content=f"Timer: {secondint}")
-            await asyncio.sleep(1)
+            await asyncio.sleep(1) #one second
         await ctx.send(f"{ctx.author.mention} Your countdown Has ended!")
     except ValueError:
         await ctx.send("Must be a number!")
@@ -190,21 +180,21 @@ async def speak(ctx, *args):
     for i in args:
         speech += i
         speech += " "
-    if len(ctx.bot.voice_clients) != 0:
+    if len(ctx.bot.voice_clients) != 0: #checks if the bot is in a voice channel, returns if in a voice channel
         await ctx.send("Please wait for me to finish speaking")
         return
     try:
-        gTTS(speech).save("message.mp3")
-        vc = await ctx.author.voice.channel.connect()
-        vc.play(discord.FFmpegPCMAudio("message.mp3"))
-        await asyncio.sleep(float(get_length("message.mp3")) + 0.0001)
-        await vc.disconnect()
-    except AttributeError:
+        gTTS(speech).save("message.mp3") #runs the text in Google's tts engine and saves it as "message.mp3"
+        vc = await ctx.author.voice.channel.connect() #joins the voice channel that the user is in
+        vc.play(discord.FFmpegPCMAudio("message.mp3")) #plays "message.mp3" through FFmpeg
+        await asyncio.sleep(float(get_length("message.mp3")) + 0.0001) #waits 0.0001 seconds after message.mp3 is finished before leaving
+        await vc.disconnect() #leaves
+    except AttributeError: #user isn't in a voice channel
         await ctx.send("Join a voice channel and try again")
 
 @bot.command() #deletes channel+role
 async def delete(ctx):
-    if ctx.channel.category == bot.get_channel(807625442273263647):
+    if ctx.channel.category == bot.get_channel(807625442273263647): #makes sure only channels in a specific category get deleted
         events = []
         roles = []
         role_thing = []
@@ -245,17 +235,17 @@ async def download(ctx, *args):
         filename += i
     try:
         with open(filepath + "/" + filename, "rb") as file:
-            await ctx.send("Here you go:", file=discord.File(file, filename))
-    except FileNotFoundError:
+            await ctx.send("Here you go:", file=discord.File(file, filename)) #if the file is found, will send
+    except FileNotFoundError: #the argument that was give was not found in the files list
         await ctx.send("This file was not found")
         await ctx.send("You may have forgotten the file extension")
 
 @bot.event #when a reaction is added
-async def on_raw_reaction_add(payload):
-    if bot.get_user(payload.user_id) == bot.user:
+async def on_raw_reaction_add(payload): #payload consists of user_id, message_id, guild_id and emoji
+    if bot.get_user(payload.user_id) == bot.user: #skips if the bot is the one adding a reaction
         return
     guild = bot.get_guild(payload.guild_id)
-    if guild == None:
+    if guild == None: #skips if the interaction is in a dm
         return
     events = []
     announcements = []
@@ -387,6 +377,7 @@ async def on_message(message):
                 event_role: discord.PermissionOverwrite(read_messages=True)
                 }
                 await guild.create_text_channel(str(deets_count[0].strip()), category = bot.get_channel(807625442273263647), overwrites = overwrites)
+                await message.channel.send("Once the event has finish, you can type \",delete\" on the channel that was just created to delete that channel and the role that gets created with the channel")
 
     if message.guild != None:
         if "bobby" in message.content.lower():

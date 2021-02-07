@@ -1,14 +1,8 @@
-event After the bot creates a dm with you, it will walk you through how to create an event.
-event This event will then be put in the announcements tab of Gang Signs Official Discord
-parrot Will delete your message and then send your message from the bot
-rawr_xd Will play rawr_xd.mp3 in the voice channel that you are in (if you are in a voice channel).
-rawr_xd This audio file was obtained through the use of Google's Text-To-Speech engine.
-ree Sends a ree with the amount of e'syou specify and then deletes your command message
-ree You can also mention someone like this (,ree 2 <@mention>) to mention them after the ree has been sent
-ree If you mention a person to include them in said ree, there is a random chance that you are exposed for your actions
-timer Enter a number and a timer for that amount of seconds will be initiated
-help Bruh its just help, are you actually stupid?
-speak If you are in a voice channel, the bot will join your voice channel, say what you tell it to say and then leave
-speak Do note that rawr xd from this command is different to rawr xd from rawr_xd
-delete If the channel is in the events category, the channel will be deleted alongside its related role
-delete If this command is used outside the events category, this command will do nothing
+create_dm: After the bot creates a dm with you, it will walk you through how to create an event. This event will then be put in the announcements tab of Gang Signs Official Discord
+parrot: Will delete your message and then send your message from the bot
+rawr_xd: Will play rawr_xd.mp3 in the voice channel that you are in (if you are in a voice channel). This audio file was obtained through the use of Google's Text-To-Speech engine.
+ree: Sends a ree with the amount of e'syou specify and then deletes your command message. You can also mention someone like this (,ree 2 <@mention>) to mention them after the ree has been sent. If you mention a person to include them in said ree, there is a random chance that you are exposed for your actions
+timer: Enter a number and a timer for that amount of seconds will be initiated
+help: Bruh its just help, are you actually stupid?
+speak: If you are in a voice channel, the bot will join your voice channel, say what you tell it to say and then leave. Do note that rawr xd from this command is different to rawr xd from rawr_xd
+delete: If the channel is in the events category, the channel will be deleted alongside its related role. If this command is used outside the events category, this command will do nothing
