@@ -1,11 +1,12 @@
 import discord, os, sys, ffmpeg, subprocess, asyncio, random, gtts
 from gtts import gTTS
+from discord import utils
 from discord.ext import commands
+from discord.utils import get
 
 filepath = os.path.dirname(os.path.abspath(__file__))
 bot = commands.Bot(command_prefix=[","])
 bot.remove_command("help")
-slurs = ["Turbinator", "Pinunderjip", "Kuthi", "Macaca", "Kalu", "Ganesh"]
 
 def get_length(filename):
     result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
@@ -23,11 +24,11 @@ def vc_test(person):
         result = True
     return result
 
-@bot.event
+@bot.event #purely for console update
 async def on_ready():
     print('We have logged in as {0.user}'.format(bot))
 
-@bot.command()
+@bot.command() #used for changing status of bot
 async def status(ctx, *args):
     if str(ctx.author) == "xemnas2004#4845":
         if args[0] == "play":
@@ -59,17 +60,17 @@ async def status(ctx, *args):
     else:
         await ctx.channel.send("No")
 
-@bot.command()
+@bot.command() #help command
 async def help(ctx, *args):
     commands_list, commands = [], "```"
-    if len(args) == 0:
+    if len(args) == 0: #shows general help list
         for i in open(filepath + "/help_file.txt"):
             commands_list.append(i)
         for i in commands_list:
             commands += str(i)
             commands += "\n"
         commands += "```"
-    if len(args) == 1:
+    if len(args) == 1: #shows specific help list
         for i in open(filepath + "/help_details.txt"):
             line = i.split()
             if line[0] == args[0]:
@@ -78,17 +79,17 @@ async def help(ctx, *args):
                     commands += " "
                 commands += "\n\n"
         commands += "```"
-        await ctx.message.channel.send("```json\n\"" + args[0] + "\"\n```")
+        await ctx.send("```json\n\"" + args[0] + "\"\n```")
     if commands != "``````":
-        await ctx.message.channel.send(commands)
+        await ctx.send(commands)
     else:
-        await ctx.message.channel.send("Type a valid command to get help for")
+        await ctx.send("Type a valid command to get help for")
 
-@bot.command()
+@bot.command() #send rawr_xd.mp3
 async def rawr_xd(ctx, *args):
     if len(args) == 0:
-        if len(ctx.bot.voice_clients) == 0:
-            await ctx.message.channel.send("Please wait for me to finish speaking")
+        if len(ctx.bot.voice_clients) != 0: #if bot is already saying something, skips the command
+            await ctx.send("Please wait for me to finish speaking")
             return
         if vc_test(ctx.message) == True:
             vc = await ctx.message.author.voice.channel.connect()
@@ -96,31 +97,27 @@ async def rawr_xd(ctx, *args):
             await asyncio.sleep(float(get_length(filepath + "/rawr_xd.mp3")) + 0.00001) #waits for the mp3 file to finish
             await vc.disconnect()
         else:
-            await ctx.message.add_reaction("\U0001F606")
+            await ctx.message.add_reaction("\U0001F606") #laughing emoji
             await ctx.message.channel.send("Join a voice channel and try again")
             await asyncio.sleep(0.1)
-            await ctx.message.add_reaction(":emoji_3:805337017168297986")
-            await ctx.message.add_reaction("\U0001F1E6")
-            await ctx.message.add_reaction("\U0001F1FC")
-            await ctx.message.add_reaction("\U0001F1F7")
-            await ctx.message.add_reaction("\U0001F1FD")
-            await ctx.message.add_reaction("\U0001F1E9")
+            await ctx.message.add_reaction(":emoji_3:805337017168297986") #red r
+            await ctx.message.add_reaction("\U0001F1E6") #a
+            await ctx.message.add_reaction("\U0001F1FC") #w
+            await ctx.message.add_reaction("\U0001F1F7") #r
+            await ctx.message.add_reaction("\U0001F1FD") #x
+            await ctx.message.add_reaction("\U0001F1E9") #d
 
-@bot.command()
+@bot.command() #copies what you say
 async def parrot(ctx, *args):
     a = ""
     for i in args:
         a += i
         a += " "
-    if "bobby" in ctx.message.content.lower():
-        b = 1
     await ctx.message.delete()
     await asyncio.sleep(1)
     repeat = await ctx.message.channel.send(a)
-    if b == 1:
-        await repeat.add_reaction(":poggers:806108825018695681")
 
-@bot.command()
+@bot.command() #sends a ree
 async def ree(ctx, *args):
     try:
         if args[0].isnumeric() == False:
@@ -133,31 +130,30 @@ async def ree(ctx, *args):
                 await ctx.message.add_reaction("emoji_3:805337017168297986")
                 await ctx.message.add_reaction("<:emoji_2:805336901644320778>")
                 await ctx.message.add_reaction(":emoji_1:805336868077830175")
-                await ctx.message.channel.send("Lmao that's too many e's even for me")
+                await ctx.send("Lmao that's too many e's even for me")
             if len(args) == 2:
                 if args[1][:2] == "<@":
                     await ctx.message.delete()
                     await asyncio.sleep(1)
-                    await ctx.message.channel.send(args[1])
-                    if ctx.message.author != "xemnas2004#4845":
+                    await ctx.send(args[1])
+                    if ctx.author != "xemnas2004#4845":
                         if random.choice(["0","1"]) != "0":
-                            await ctx.message.channel.send(ctx.message.author.mention + " was the one who mentioned you btw")
-
+                            await ctx.send(ctx.author.mention + " was the one who mentioned you btw")
     except IndexError:
-        await ctx.message.channel.send("Please type a number of e's to send")
+        await ctx.send("Please type a number of e's to send")
         await asyncio.sleep(1)
-        await ctx.message.channel.send("However...")
+        await ctx.send("However...")
         await asyncio.sleep(1)
-        await ctx.message.channel.send("ree")
+        await ctx.send("ree")
 
-@bot.command()
+@bot.command() #creates a dm with you
 async def event(ctx, *args):
     dm = await ctx.message.author.create_dm()
     await dm.send("Type \"event\" in this dm to start creation of an event")
     await asyncio.sleep(1)
     await dm.send("For future reference, you can initiate this command straight from the dm next time")
 
-@bot.command()
+@bot.command() #creates a timer in seconds
 async def timer(ctx, seconds):
     try:
         secondint = int(seconds)
@@ -179,18 +175,18 @@ async def timer(ctx, seconds):
     except ValueError:
         await ctx.send("Must be a number!")
 
-@bot.command()
+@bot.command() #says a random slur
 async def slur(ctx):
-    await ctx.channel.send(random.choice(slurs))
+    await ctx.channel.send(random.choice(["Turbinator", "Pinunderjip", "Kuthi", "Macaca", "Kalu", "Ganesh"]))
 
-@bot.command()
+@bot.command() #speaks your word/phras aloud
 async def speak(ctx, *args):
     speech = ""
     for i in args:
         speech += i
         speech += " "
     if len(ctx.bot.voice_clients) != 0:
-        await ctx.message.channel.send("Please wait for me to finish speaking")
+        await ctx.send("Please wait for me to finish speaking")
         return
     try:
         gTTS(speech).save(filepath + "\message.mp3")
@@ -199,9 +195,74 @@ async def speak(ctx, *args):
         await asyncio.sleep(float(get_length(filepath + "\message.mp3")) + 0.0001)
         await vc.disconnect()
     except AttributeError:
-        await ctx.message.channel.send("Join a voice channel and try again")
+        await ctx.send("Join a voice channel and try again")
 
-@bot.event
+@bot.command() #deletes channel+role
+async def delete(ctx):
+    if ctx.channel.category == bot.get_channel(807625442273263647):
+        events = []
+        roles = []
+        role_names = []
+        ids = []
+        channel_name = ctx.message.channel
+        for i in open(filepath + "/current_events.txt"):
+            events.append(i)
+        for i in events:
+            event = []
+            for j in i.split(" "):
+                event.append(int(j))
+            ids.append(event)
+        for i in ids:
+            roles.append(ctx.guild.get_role(i[1]))
+        for i in roles:
+            print(i)
+            if str(i) == str(ctx.message.channel):
+                await i.delete()
+                await ctx.message.channel.delete()
+    else:
+        await ctx.message.channel.send("Lmao you can't delete this channel")
+        return
+
+@bot.command() #downloads file
+async def download(ctx, *args):
+    filename = ""
+    await ctx.message.channel.send(*args)
+    for i in args:
+        filename += i
+    try:
+        with open(filepath + "/" + filename, "rb") as file:
+            await ctx.send("Here you go:", file=discord.File(file, filename))
+    except FileNotFoundError:
+        await ctx.send("This file was not found")
+        await ctx.send("You may have forgotten the file extension")
+
+@bot.event #when a reaction is added
+async def on_raw_reaction_add(payload):
+    if bot.get_user(payload.user_id) == bot.user:
+        return
+    guild = bot.get_guild(payload.guild_id)
+    if guild == None:
+        return
+    events = []
+    announcements = []
+    ids = []
+    for i in open(filepath + "/current_events.txt"):
+        events.append(i.strip())
+    for i in events:
+        event = []
+        for j in i.split(" "):
+            event.append(int(j))
+        ids.append(event)
+    for i in ids:
+        announcements.append(i[0])
+    if payload.message_id in announcements:
+        index = announcements.index(payload.message_id)
+        role = guild.get_role(ids[index][1])
+        await payload.member.add_roles(role)
+    else:
+        return
+
+@bot.event #when a message is received
 async def on_message(message):
     if message.author == bot.user:
         return
@@ -289,6 +350,7 @@ async def on_message(message):
         if message.content.lower() == "send event":
             final_deets = ""
             deets_count = []
+            current_events = []
             announcement = bot.get_channel(723788723380289537)
             for i in open(filepath + "/events_" + str(message.author) + ".txt"):
                 final_deets += i
@@ -296,9 +358,21 @@ async def on_message(message):
             if len(deets_count) < 3:
                 await message.channel.send("Please finish typing all of the details")
             else:
-                announce = await announcement.send(final_deets + "\n" + "@everyone")
-                await announce.add_reaction("\U0001F4C5")
+                announce = await announcement.send(final_deets + "\n" + "@everyone. React with \U0001F44D to express interest in this event")
+                await announce.add_reaction("\U0001F44D")
+                await message.add_reaction("\U0001F44D")
                 os.remove(filepath + "/events_" + str(message.author) + ".txt")
+                guild = announce.guild
+                event_role = await guild.create_role(name=str(deets_count[0].strip()))
+                with open(filepath + "/current_events.txt", "a") as file:
+                    file.write(str(announce.id) + " " + str(event_role.id))
+                    file.write("\n")
+                overwrites = {
+                guild.default_role: discord.PermissionOverwrite(read_messages=False),
+                guild.me: discord.PermissionOverwrite(read_messages=True),
+                event_role: discord.PermissionOverwrite(read_messages=True)
+                }
+                await guild.create_text_channel(str(deets_count[0].strip()), category = bot.get_channel(807625442273263647), overwrites = overwrites)
 
     if message.guild != None:
         if "bobby" in message.content.lower():
@@ -312,6 +386,7 @@ async def on_message(message):
             await pog.add_reaction("\U0001F1F5")
             await pog.add_reaction("\U0001F1F4")
             await pog.add_reaction("\U0001F1EC")
+            return
         if "poggers" in message.content.lower() or "pog" in message.content.lower():
              await message.add_reaction(":poggers:806108825018695681")
              await message.add_reaction("\U0001F1F5")

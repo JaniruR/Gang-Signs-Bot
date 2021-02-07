@@ -1,3 +1,4 @@
+delete: Deletes the channel
 help: Shows this message (do ",help [command]" to get more information about the command)
 event: creates a dm between you and the bot (preferably so you can create an even announcement)
 parrot: Deletes your message and sends the message from the bot
