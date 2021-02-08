@@ -58,7 +58,7 @@ async def status(ctx, *args):
         if args[0] == "reset":
             await bot.change_presence(activity=None, status=None)
     else:
-        await ctx.channel.send("No")
+        await ctx.send("No")
 
 @bot.command() #help command
 async def help(ctx, *args):
@@ -75,10 +75,9 @@ async def help(ctx, *args):
             if command[0] == args[0]: #checks for the command requested
                 embed.add_field(name=str(command[0]), value=str(command[1]), inline=False) #if the command requested is found, will add to the embed
                 a += 1
-    if a != 0:
-        await ctx.send(embed=embed) #sends the embed if there are more than 0 lines
-    else:
-        await ctx.send("Please type a valid command") #sends if there are 0 lines, the likely cause of this is that an invalid command was sent as the argument
+    if a == 0:
+        embed.add_field(name="Please type a valid command", value="Lmao you didn't even type a vaild command", inline=False) #if there are 0 lines, adds a line to the embed telling user to type a valid command
+    await ctx.send(embed=embed) #sends the embed
 
 @bot.command() #send rawr_xd.mp3
 async def rawr_xd(ctx, *args):
@@ -86,14 +85,14 @@ async def rawr_xd(ctx, *args):
         if len(ctx.bot.voice_clients) != 0: #if bot is already saying something, skips the command
             await ctx.send("Please wait for me to finish speaking")
             return
-        if vc_test(ctx.message) == True:
-            vc = await ctx.message.author.voice.channel.connect()
+        if vc_test(ctx) == True:
+            vc = await ctx.author.voice.channel.connect()
             vc.play(discord.FFmpegPCMAudio(filepath + "/rawr_xd.mp3")) #plays the audio through FFmpeg
             await asyncio.sleep(float(get_length(filepath + "/rawr_xd.mp3")) + 0.00001) #waits for the mp3 file to finish
             await vc.disconnect()
         else:
             await ctx.message.add_reaction("\U0001F606") #laughing emoji
-            await ctx.message.channel.send("Join a voice channel and try again")
+            await ctx.send("Join a voice channel and try again")
             await asyncio.sleep(0.1)
             await ctx.message.add_reaction(":emoji_3:805337017168297986") #red r
             await ctx.message.add_reaction("\U0001F1E6") #a
@@ -110,17 +109,17 @@ async def parrot(ctx, *args):
         a += " "
     await ctx.message.delete()
     await asyncio.sleep(1)
-    await ctx.message.channel.send(a)
+    await ctx.send(a)
 
 @bot.command() #sends a ree
 async def ree(ctx, *args):
     try:
         if args[0].isnumeric() == False:
-            await ctx.message.channel.send("Type a vaild number")
+            await ctx.send("Type a vaild number")
         else:
             if int(args[0]) < 2000:
                 message = "r" + "e"*int(args[0])
-                await ctx.message.channel.send(message)
+                await ctx.send(message)
             else:
                 await ctx.message.add_reaction("emoji_3:805337017168297986")
                 await ctx.message.add_reaction("<:emoji_2:805336901644320778>")
@@ -131,9 +130,8 @@ async def ree(ctx, *args):
                     await ctx.message.delete()
                     await asyncio.sleep(1)
                     await ctx.send(args[1])
-                    if ctx.author != "xemnas2004#4845": #will not expose @xemnas2004#4845
-                        if random.choice(["0","1"]) != "0": #if the user is not @xemnas2004#4845, will have a 50% chance of being exposed
-                            await ctx.send(ctx.author.mention + " was the one who mentioned you btw")
+                    if random.choice(["0","1"]) != "0": #if the user is not @xemnas2004#4845, will have a 50% chance of being exposed
+                        await ctx.send(ctx.author.mention + " was the one who mentioned you btw")
     except IndexError: #an argument was not supplied
         await ctx.send("Please type a number of e's to send")
         await asyncio.sleep(1)
@@ -142,8 +140,8 @@ async def ree(ctx, *args):
         await ctx.send("ree")
 
 @bot.command() #creates a dm with you
-async def create_dm(ctx, *args):
-    dm = await ctx.message.author.create_dm() #creates the dm
+async def create_dm(ctx):
+    dm = await ctx.author.create_dm() #creates the dm
     await dm.send("Type \"event\" in this dm to start creation of an event")
     await asyncio.sleep(1)
     await dm.send("For future reference, you can initiate this command straight from the dm next time")
@@ -172,7 +170,7 @@ async def timer(ctx, seconds):
 
 @bot.command() #says a random slur
 async def slur(ctx):
-    await ctx.channel.send(random.choice(["Turbinator", "Pinunderjip", "Kuthi", "Macaca", "Kalu", "Ganesh"]))
+    await ctx.send(random.choice(["Turbinator", "Pinunderjip", "Kuthi", "Macaca", "Kalu", "Ganesh"]))
 
 @bot.command() #speaks your word/phrase aloud
 async def speak(ctx, *args):
@@ -200,7 +198,7 @@ async def delete(ctx):
         role_thing = []
         role_names = []
         ids = []
-        channel_name = ctx.message.channel
+        channel_name = ctx.channel
         for i in open(filepath + "/current_events.txt"):
             events.append(i)
         for i in events:
@@ -220,17 +218,17 @@ async def delete(ctx):
             role_names.append(word[:-1])
         print(role_names)
         for i in role_names:
-            if str(i).lower() == str(ctx.message.channel):
+            if str(i).lower() == str(ctx.channel):
                 await roles[role_names.index(i)].delete()
-                await ctx.message.channel.delete()
+                await ctx.channel.delete()
     else:
-        await ctx.message.channel.send("Lmao you can't delete this channel")
+        await ctx.send("Lmao you can't delete this channel")
         return
 
 @bot.command() #downloads file
 async def download(ctx, *args):
     filename = ""
-    await ctx.message.channel.send(*args)
+    await ctx.send(*args)
     for i in args:
         filename += i
     try:
