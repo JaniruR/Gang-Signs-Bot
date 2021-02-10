@@ -245,18 +245,6 @@ async def download(ctx, *args):
         await ctx.send("This file was not found")
         await ctx.send("You may have forgotten the file extension")
 
-@bot.command() #embed example
-async def embed(ctx, *args):
-    embed = discord.Embed(title="rawr", url="https://lh3.googleusercontent.com/ZRl_vPNXI424kPCoMPRFc0HSAy8qUXEoufeLZ7FiO8TO3QM4JqjIIs78JV5EmMnvYbrxMhZOXz1xc7mHe9ngesu0ZK3mXpXg2m7lGAFaa9xzO_ELt7pTQB92XUeudFQC3WcdY0TdzUDjx05IYSA_kqBSM4DJ7aOR7ZejhQ0zz2U3kq7XSDzqDaKsAv8JahFnf5Cn4zIwDt6Rp8AWxvhF4Jr3dkIKRfWqnAhMYNPtk407ZTgX_EP9wH2hKZwwzeo9RO3VqKCwUgzUeJgl5OWBFfC3uUG3GF0m_BQ4kSGvInlETLXcuFs4GTvYvtKPmB5daf7AqPz_QPxnhtaYXWYUKKGyGh88aKvfHWRTfbX7T5Bd-hLBJfZT7dpKLD1a599kSnsuyRVGwtmut4uNT49GxPPUgsntKTwT5NglNu1rX_-pry7zdKldxJwqBwwRTFlUDSKSnhoSap7hC0W2umaMKfhETO6t51ZX4c7zLTtdWHrdzH7cagoQm1E7DKgpeCzd1kjLyw3KEwCdXHZMuNzO3SpSoewri7_we3avIxMa2jtYVCMM1i9_n5yUdUYNTv87h9w7B2R6HNanvpOPFF_x5AcMq0eFNUXQxj-UBgTApEzlVE9r-sIqMIx9_8jM3XhWZwsE77k-HDmtUl0DSA6I1SfPQAswjzIBl56n9SYlMDxXGnUzYYAnsxm6Pvm9=w1188-h891-no?authuser=0")
-    embed.add_field(name="hi", value="no", inline=False)
-    embed.add_field(name="no", value="yes", inline=True)
-    embed.add_field(name="yes", value="no", inline=True)
-    embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
-    embed.set_thumbnail(url=ctx.guild.icon_url)
-    await ctx.send(embed=embed)
-    with open(filepath + "/embed.txt","rb") as file:
-        await ctx.send(file=discord.File(file, "How to embed"))
-
 @bot.event #when a reaction is added
 async def on_raw_reaction_add(payload): #payload consists of user_id, message_id, guild_id and emoji
     if bot.get_user(payload.user_id) == bot.user: #skips if the bot is the one adding a reaction
