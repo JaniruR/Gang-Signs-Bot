@@ -1,8 +1,9 @@
-import discord, os, sys, ffmpeg, subprocess, asyncio, random, gtts
+import discord, os, sys, ffmpeg, subprocess, asyncio, random, gtts, datetime
 from gtts import gTTS
 from discord import utils
 from discord.ext import commands
 from discord.utils import get
+from datetime import datetime
 
 filepath = os.path.dirname(os.path.abspath(__file__))
 bot = commands.Bot(command_prefix=[","])
@@ -69,14 +70,20 @@ async def help(ctx, *args):
             command = i.strip().split(":") #splits each line of help_file.txt into [command: description]
             embed.add_field(name=str(command[0]), value=str(command[1]), inline=False) #adds each line of the file into the embed
             a += 1
+        embed.set_footer(text="Type \",help [command]\" to get detailed help for each command")
     if len(args) == 1: #if an argument is given, will open help_details.txt
         for i in open(filepath + "/help_details.txt"):
             command = i.strip().split(":") #splits each line of help_details.txt into [command: description]
             if command[0] == args[0]: #checks for the command requested
                 embed.add_field(name=str(command[0]), value=str(command[1]), inline=False) #if the command requested is found, will add to the embed
                 a += 1
+        embed.set_footer(text="Have a good day")
     if a == 0:
+        embed.set_image(url="https://i.pinimg.com/originals/b5/80/a3/b580a383ce5cee47ab6156b0e84843cc.jpg")
         embed.add_field(name="Please type a valid command", value="Lmao you didn't even type a vaild command", inline=False) #if there are 0 lines, adds a line to the embed telling user to type a valid command
+        embed.set_footer(text="Lmao " + ctx.message.content + "? What kind of command is that?")
+    embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url) #user name and profile picture
+    embed.set_thumbnail(url=ctx.guild.icon_url) #server url
     await ctx.send(embed=embed) #sends the embed
 
 @bot.command() #send rawr_xd.mp3
@@ -130,7 +137,7 @@ async def ree(ctx, *args):
                     await ctx.message.delete()
                     await asyncio.sleep(1)
                     await ctx.send(args[1])
-                    if random.choice(["0","1"]) != "0": #if the user is not @xemnas2004#4845, will have a 50% chance of being exposed
+                    if random.choice(["0","1"]) != "0": #author will have a 50% chance of being exposed
                         await ctx.send(ctx.author.mention + " was the one who mentioned you btw")
     except IndexError: #an argument was not supplied
         await ctx.send("Please type a number of e's to send")
@@ -238,6 +245,18 @@ async def download(ctx, *args):
         await ctx.send("This file was not found")
         await ctx.send("You may have forgotten the file extension")
 
+@bot.command() #embed example
+async def embed(ctx, *args):
+    embed = discord.Embed(title="rawr", url="https://lh3.googleusercontent.com/ZRl_vPNXI424kPCoMPRFc0HSAy8qUXEoufeLZ7FiO8TO3QM4JqjIIs78JV5EmMnvYbrxMhZOXz1xc7mHe9ngesu0ZK3mXpXg2m7lGAFaa9xzO_ELt7pTQB92XUeudFQC3WcdY0TdzUDjx05IYSA_kqBSM4DJ7aOR7ZejhQ0zz2U3kq7XSDzqDaKsAv8JahFnf5Cn4zIwDt6Rp8AWxvhF4Jr3dkIKRfWqnAhMYNPtk407ZTgX_EP9wH2hKZwwzeo9RO3VqKCwUgzUeJgl5OWBFfC3uUG3GF0m_BQ4kSGvInlETLXcuFs4GTvYvtKPmB5daf7AqPz_QPxnhtaYXWYUKKGyGh88aKvfHWRTfbX7T5Bd-hLBJfZT7dpKLD1a599kSnsuyRVGwtmut4uNT49GxPPUgsntKTwT5NglNu1rX_-pry7zdKldxJwqBwwRTFlUDSKSnhoSap7hC0W2umaMKfhETO6t51ZX4c7zLTtdWHrdzH7cagoQm1E7DKgpeCzd1kjLyw3KEwCdXHZMuNzO3SpSoewri7_we3avIxMa2jtYVCMM1i9_n5yUdUYNTv87h9w7B2R6HNanvpOPFF_x5AcMq0eFNUXQxj-UBgTApEzlVE9r-sIqMIx9_8jM3XhWZwsE77k-HDmtUl0DSA6I1SfPQAswjzIBl56n9SYlMDxXGnUzYYAnsxm6Pvm9=w1188-h891-no?authuser=0")
+    embed.add_field(name="hi", value="no", inline=False)
+    embed.add_field(name="no", value="yes", inline=True)
+    embed.add_field(name="yes", value="no", inline=True)
+    embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+    embed.set_thumbnail(url=ctx.guild.icon_url)
+    await ctx.send(embed=embed)
+    with open(filepath + "/embed.txt","rb") as file:
+        await ctx.send(file=discord.File(file, "How to embed"))
+
 @bot.event #when a reaction is added
 async def on_raw_reaction_add(payload): #payload consists of user_id, message_id, guild_id and emoji
     if bot.get_user(payload.user_id) == bot.user: #skips if the bot is the one adding a reaction
@@ -261,6 +280,7 @@ async def on_raw_reaction_add(payload): #payload consists of user_id, message_id
         index = announcements.index(payload.message_id)
         role = guild.get_role(ids[index][1])
         await payload.member.add_roles(role)
+        return
     else:
         return
 
