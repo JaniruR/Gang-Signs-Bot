@@ -1,9 +1,8 @@
-import discord, os, sys, ffmpeg, subprocess, asyncio, random, gtts, datetime
+import discord, os, sys, ffmpeg, subprocess, asyncio, random, gtts
 from gtts import gTTS
 from discord import utils
 from discord.ext import commands
 from discord.utils import get
-from datetime import datetime
 
 filepath = os.path.dirname(os.path.abspath(__file__))
 bot = commands.Bot(command_prefix=[","])
@@ -18,7 +17,7 @@ def get_length(filename): #gets the length of an mp3 file
     return float(result.stdout)
 
 def vc_test(person): #tests if the person doing the command is in a voice channel
-    test = person.author.voice
+    test = person.voice
     if test == None:
         result = False
     else:
@@ -92,7 +91,7 @@ async def rawr_xd(ctx, *args):
         if len(ctx.bot.voice_clients) != 0: #if bot is already saying something, skips the command
             await ctx.send("Please wait for me to finish speaking")
             return
-        if vc_test(ctx) == True:
+        if vc_test(ctx.author) == True:
             vc = await ctx.author.voice.channel.connect()
             vc.play(discord.FFmpegPCMAudio(filepath + "/rawr_xd.mp3")) #plays the audio through FFmpeg
             await asyncio.sleep(float(get_length(filepath + "/rawr_xd.mp3")) + 0.00001) #waits for the mp3 file to finish
@@ -110,13 +109,9 @@ async def rawr_xd(ctx, *args):
 
 @bot.command() #copies what you say
 async def parrot(ctx, *args):
-    a = ""
-    for i in args:
-        a += i
-        a += " "
     await ctx.message.delete()
     await asyncio.sleep(1)
-    await ctx.send(a)
+    await ctx.send(" ".join(args))
 
 @bot.command() #sends a ree
 async def ree(ctx, *args):
@@ -125,8 +120,7 @@ async def ree(ctx, *args):
             await ctx.send("Type a vaild number")
         else:
             if int(args[0]) < 2000:
-                message = "r" + "e"*int(args[0])
-                await ctx.send(message)
+                await ctx.send("r" + "e"*int(args[0]))
             else:
                 await ctx.message.add_reaction("emoji_3:805337017168297986")
                 await ctx.message.add_reaction("<:emoji_2:805336901644320778>")
@@ -141,17 +135,13 @@ async def ree(ctx, *args):
                         await ctx.send(ctx.author.mention + " was the one who mentioned you btw")
     except IndexError: #an argument was not supplied
         await ctx.send("Please type a number of e's to send")
-        await asyncio.sleep(1)
-        await ctx.send("However...")
-        await asyncio.sleep(1)
-        await ctx.send("ree")
 
 @bot.command() #creates a dm with you
 async def create_dm(ctx):
     dm = await ctx.author.create_dm() #creates the dm
     await dm.send("Type \"event\" in this dm to start creation of an event")
     await asyncio.sleep(1)
-    await dm.send("For future reference, you can initiate this command straight from the dm next time")
+    await dm.send("For future reference, you can initiate this command straight from the dm next time by doing \"event\"")
 
 @bot.command() #creates a timer in seconds
 async def timer(ctx, seconds):
@@ -163,7 +153,7 @@ async def timer(ctx, seconds):
         if secondint <= 0:
             await ctx.send("I dont think im allowed to do negatives")
             raise BaseException
-        message = await ctx.send("Timer: {seconds}")
+        message = await ctx.send("Timer: " + str(seconds))
         while True:
             secondint -= 1
             if secondint == 0:
@@ -234,16 +224,14 @@ async def delete(ctx):
 
 @bot.command() #downloads file
 async def download(ctx, *args):
-    filename = ""
-    await ctx.send(*args)
-    for i in args:
-        filename += i
+    await ctx.send(args)
+    filename = args[0]
     try:
         with open(filepath + "/" + filename, "rb") as file:
             await ctx.send("Here you go:", file=discord.File(file, filename)) #if the file is found, will send
     except FileNotFoundError: #the argument that was give was not found in the files list
         await ctx.send("This file was not found")
-        await ctx.send("You may have forgotten the file extension")
+        await ctx.send("You may have forgotten the file extension or added an unecessary")
 
 @bot.event #when a reaction is added
 async def on_raw_reaction_add(payload): #payload consists of user_id, message_id, guild_id and emoji
@@ -271,6 +259,15 @@ async def on_raw_reaction_add(payload): #payload consists of user_id, message_id
         return
     else:
         return
+
+@bot.event
+async def on_voice_state_update(member, before, after,):
+    if before.channel == None and after.channel != None and member != bot.user:
+        gTTS(str(member.display_name) + " has joined the chat").save("entered_the_chat.mp3")
+        vc = await after.channel.connect()
+        vc.play(discord.FFmpegPCMAudio("entered_the_chat.mp3"))
+        await asyncio.sleep(float(get_length("entered_the_chat.mp3")) + 0.0001)
+        await vc.disconnect()
 
 @bot.event #when a message is received
 async def on_message(message):
@@ -383,7 +380,7 @@ async def on_message(message):
                 event_role: discord.PermissionOverwrite(read_messages=True)
                 }
                 await guild.create_text_channel(str(deets_count[0].strip()), category = bot.get_channel(807625442273263647), overwrites = overwrites)
-                await message.channel.send("Once the event has finish, you can type \",delete\" on the channel that was just created to delete that channel and the role that gets created with the channel")
+                await message.channel.send("Once the event has finished, you can type \",delete\" on the channel that was just created to delete that channel and the role that gets created with the channel")
 
     if message.guild != None:
         if "bobby" in message.content.lower():
