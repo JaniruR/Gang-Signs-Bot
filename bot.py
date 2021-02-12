@@ -263,11 +263,8 @@ async def on_raw_reaction_add(payload): #payload consists of user_id, message_id
 @bot.event
 async def on_voice_state_update(member, before, after,):
     if before.channel == None and after.channel != None and member != bot.user:
-        gTTS(str(member.display_name) + " has joined the chat").save("entered_the_chat.mp3")
-        vc = await after.channel.connect()
-        vc.play(discord.FFmpegPCMAudio("entered_the_chat.mp3"))
-        await asyncio.sleep(float(get_length("entered_the_chat.mp3")) + 0.0001)
-        await vc.disconnect()
+        general = bot.get_channel(704120332486967299)
+        await general.send(str(member.mention) + " has joined " + str(after.channel))
 
 @bot.event #when a message is received
 async def on_message(message):
