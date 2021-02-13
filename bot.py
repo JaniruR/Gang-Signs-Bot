@@ -266,14 +266,7 @@ async def on_voice_state_update(member, before, after,):
     if before.channel == None and after.channel != None and member != bot.user:
         await channel.send(str(member.mention) + " has joined " + str(after.channel))
     if after.channel == None and before.channel != None and member != bot.user:
-        if len(bot.voice_clients) != 0:
-            await channel.send(str(member.mention) + " has left " + str(before.channel))
-        else:
-            gTTS(str(member.display_name) + " has left the chat").save("chat_message.mp3")
-            vc = await before.channel.connect()
-            vc.play(discord.FFmpegPCMAudio("chat_message.mp3"))
-            await asyncio.sleep(float(get_length("chat_message.mp3")) + 0.0001)
-            await vc.disconnect()
+        await channel.send(str(member.mention) + " has joined " + str(before.channel))
 
 @bot.event #when a message is received
 async def on_message(message):
