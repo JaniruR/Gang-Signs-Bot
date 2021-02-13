@@ -88,7 +88,7 @@ async def help(ctx, *args):
 @bot.command() #send rawr_xd.mp3
 async def rawr_xd(ctx, *args):
     if len(args) == 0:
-        if len(ctx.bot.voice_clients) != 0: #if bot is already saying something, skips the command
+        if len(bot.voice_clients) != 0: #if bot is already saying something, skips the command
             await ctx.send("Please wait for me to finish speaking")
             return
         if vc_test(ctx.author) == True:
@@ -175,7 +175,7 @@ async def speak(ctx, *args):
     for i in args:
         speech += i
         speech += " "
-    if len(ctx.bot.voice_clients) != 0: #checks if the bot is in a voice channel, returns if in a voice channel
+    if len(bot.voice_clients) != 0: #checks if the bot is in a voice channel, returns if in a voice channel
         await ctx.send("Please wait for me to finish speaking")
         return
     try:
@@ -262,9 +262,18 @@ async def on_raw_reaction_add(payload): #payload consists of user_id, message_id
 
 @bot.event
 async def on_voice_state_update(member, before, after,):
+    channel = bot.get_channel(810100291147399198)
     if before.channel == None and after.channel != None and member != bot.user:
-        general = bot.get_channel(704120332486967299)
-        await general.send(str(member.mention) + " has joined " + str(after.channel))
+        await channel.send(str(member.mention) + " has joined " + str(after.channel))
+    if after.channel == None and before.channel != None and member != bot.user:
+        if len(bot.voice_clients) != 0:
+            await channel.send(str(member.mention) + " has left " + str(before.channel))
+        else:
+            gTTS(str(member.display_name) + " has left the chat").save("chat_message.mp3")
+            vc = await before.channel.connect()
+            vc.play(discord.FFmpegPCMAudio("chat_message.mp3"))
+            await asyncio.sleep(float(get_length("chat_message.mp3")) + 0.0001)
+            await vc.disconnect()
 
 @bot.event #when a message is received
 async def on_message(message):
