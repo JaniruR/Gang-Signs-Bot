@@ -31,29 +31,13 @@ async def on_ready():
 @bot.command() #used for changing status of bot
 async def status(ctx, *args):
     if args[0] == "play":
-        game = ""
-        for i in args[1:]:
-            game += i
-            game += " "
-            await bot.change_presence(activity=discord.Game(game))
+        await bot.change_presence(activity=discord.Game(" ".join(args[1:])))
     if args[0] == "stream":
-        stream = ""
-        for i in args[1:-1]:
-            stream += i
-            stream += " "
-        await bot.change_presence(activity=discord.Streaming(name=stream, url=args[-1]))
+        await bot.change_presence(activity=discord.Streaming(name=" ".join(args[1:-1]), url=args[-1]))
     if args[0] == "listen":
-        song = ""
-        for i in args[1:]:
-            song += i
-            song += " "
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=song))
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=" ".join(args[1:])))
     if args[0] == "watch":
-        video = ""
-        for i in args[1:]:
-            video += i
-            video += " "
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=video))
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" ".join(args[1:])))
     if args[0] == "reset":
         await bot.change_presence(activity=None, status=None)
 
@@ -173,10 +157,7 @@ async def slur(ctx):
 
 @bot.command() #speaks your word/phrase aloud
 async def speak(ctx, *args):
-    speech = ""
-    for i in args:
-        speech += i
-        speech += " "
+    speech = " ".join(args)
     if len(bot.voice_clients) != 0: #checks if the bot is in a voice channel, returns if in a voice channel
         await ctx.send("Please wait for me to finish speaking")
         return
