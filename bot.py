@@ -30,35 +30,32 @@ async def on_ready():
 
 @bot.command() #used for changing status of bot
 async def status(ctx, *args):
-    if str(ctx.author) == "xemnas2004#4845":
-        if args[0] == "play":
-            game = ""
-            for i in args[1:]:
-                game += i
-                game += " "
-                await bot.change_presence(activity=discord.Game(game))
-        if args[0] == "stream":
-            stream = ""
-            for i in args[1:-1]:
-                stream += i
-                stream += " "
-            await bot.change_presence(activity=discord.Streaming(name=stream, url=args[-1]))
-        if args[0] == "listen":
-            song = ""
-            for i in args[1:]:
-                song += i
-                song += " "
-            await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=song))
-        if args[0] == "watch":
-            video = ""
-            for i in args[1:]:
-                video += i
-                video += " "
-            await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=video))
-        if args[0] == "reset":
-            await bot.change_presence(activity=None, status=None)
-    else:
-        await ctx.send("No")
+    if args[0] == "play":
+        game = ""
+        for i in args[1:]:
+            game += i
+            game += " "
+            await bot.change_presence(activity=discord.Game(game))
+    if args[0] == "stream":
+        stream = ""
+        for i in args[1:-1]:
+            stream += i
+            stream += " "
+        await bot.change_presence(activity=discord.Streaming(name=stream, url=args[-1]))
+    if args[0] == "listen":
+        song = ""
+        for i in args[1:]:
+            song += i
+            song += " "
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=song))
+    if args[0] == "watch":
+        video = ""
+        for i in args[1:]:
+            video += i
+            video += " "
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=video))
+    if args[0] == "reset":
+        await bot.change_presence(activity=None, status=None)
 
 @bot.command() #help command
 async def help(ctx, *args):
@@ -71,18 +68,23 @@ async def help(ctx, *args):
             a += 1
         embed.set_footer(text="Type \",help [command]\" to get detailed help for each command")
     if len(args) == 1: #if an argument is given, will open help_details.txt
-        for i in open(filepath + "/help_details.txt"):
-            command = i.strip().split(":") #splits each line of help_details.txt into [command: description]
-            if command[0] == args[0]: #checks for the command requested
-                embed.add_field(name=str(command[0]), value=str(command[1]), inline=False) #if the command requested is found, will add to the embed
-                a += 1
+        if str(args[0]) == "status":
+            for i in open(filepath + "/status.txt"):
+                line = i.strip().split(":")
+                embed.add_field(name=str(line[0]), value=str(line[1]), inline=False)
+            a += 1
+        else:
+            for i in open(filepath + "/help_details.txt"):
+                command = i.strip().split(":") #splits each line of help_details.txt into [command: description]
+                if command[0] == args[0]: #checks for the command requested
+                    embed.add_field(name=str(command[0]), value=str(command[1]), inline=False) #if the command requested is found, will add to the embed
+                    a += 1
         embed.set_footer(text="Have a good day")
     if a == 0:
         embed.set_image(url="https://i.pinimg.com/originals/b5/80/a3/b580a383ce5cee47ab6156b0e84843cc.jpg")
         embed.add_field(name="Please type a valid command", value="Lmao you didn't even type a vaild command", inline=False) #if there are 0 lines, adds a line to the embed telling user to type a valid command
         embed.set_footer(text="Lmao " + ctx.message.content + "? What kind of command is that?")
     embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url) #user name and profile picture
-    embed.set_thumbnail(url=ctx.guild.icon_url) #server url
     await ctx.send(embed=embed) #sends the embed
 
 @bot.command() #send rawr_xd.mp3
