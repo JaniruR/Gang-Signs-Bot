@@ -187,41 +187,6 @@ async def speak(ctx, *args):
     except AttributeError: #user isn't in a voice channel
         await ctx.send("Join a voice channel and try again")
 
-@bot.command() #deletes channel+role
-async def delete(ctx):
-    if ctx.channel.category == bot.get_channel(807625442273263647): #makes sure only channels in a specific category get deleted
-        events = []
-        roles = []
-        role_thing = []
-        role_names = []
-        ids = []
-        channel_name = ctx.channel
-        for i in open(filepath + "/current_events.txt"):
-            events.append(i)
-        for i in events:
-            event = []
-            for j in i.split(" "):
-                event.append(int(j))
-            ids.append(event)
-        for i in ids:
-            roles.append(ctx.guild.get_role(i[1]))
-        for i in roles:
-            role_thing.append(str(i).split(" "))
-        for i in role_thing:
-            word = ""
-            for j in i:
-                word += j.lower()
-                word += "-"
-            role_names.append(word[:-1])
-        print(role_names)
-        for i in role_names:
-            if str(i).lower() == str(ctx.channel):
-                await roles[role_names.index(i)].delete()
-                await ctx.channel.delete()
-    else:
-        await ctx.send("Lmao you can't delete this channel")
-        return
-
 @bot.command() #downloads file
 async def download(ctx, *args):
     await ctx.send(args)
@@ -232,33 +197,6 @@ async def download(ctx, *args):
     except FileNotFoundError: #the argument that was give was not found in the files list
         await ctx.send("This file was not found")
         await ctx.send("You may have forgotten the file extension or added an unecessary")
-
-@bot.event #when a reaction is added
-async def on_raw_reaction_add(payload): #payload consists of user_id, message_id, guild_id and emoji
-    if bot.get_user(payload.user_id) == bot.user: #skips if the bot is the one adding a reaction
-        return
-    guild = bot.get_guild(payload.guild_id)
-    if guild == None: #skips if the interaction is in a dm
-        return
-    events = []
-    announcements = []
-    ids = []
-    for i in open(filepath + "/current_events.txt"):
-        events.append(i.strip())
-    for i in events:
-        event = []
-        for j in i.split(" "):
-            event.append(int(j))
-        ids.append(event)
-    for i in ids:
-        announcements.append(i[0])
-    if payload.message_id in announcements:
-        index = announcements.index(payload.message_id)
-        role = guild.get_role(ids[index][1])
-        await payload.member.add_roles(role)
-        return
-    else:
-        return
 
 @bot.event
 async def on_voice_state_update(member, before, after,):
@@ -364,22 +302,10 @@ async def on_message(message):
             if len(deets_count) < 3:
                 await message.channel.send("Please finish typing all of the details")
             else:
-                announce = await announcement.send(final_deets + "\n" + "@everyone. React with \U0001F44D to express interest in this event")
+                await announcement.send(final_deets + "\n" + "@everyone. React with \U0001F44D to express interest in this event")
                 await announce.add_reaction("\U0001F44D")
                 await message.add_reaction("\U0001F44D")
                 os.remove(filepath + "/events_" + str(message.author) + ".txt")
-                guild = announce.guild
-                event_role = await guild.create_role(name=str(deets_count[0].strip()))
-                with open(filepath + "/current_events.txt", "a") as file:
-                    file.write(str(announce.id) + " " + str(event_role.id))
-                    file.write("\n")
-                overwrites = {
-                guild.default_role: discord.PermissionOverwrite(read_messages=False),
-                guild.me: discord.PermissionOverwrite(read_messages=True),
-                event_role: discord.PermissionOverwrite(read_messages=True)
-                }
-                await guild.create_text_channel(str(deets_count[0].strip()), category = bot.get_channel(807625442273263647), overwrites = overwrites)
-                await message.channel.send("Once the event has finished, you can type \",delete\" on the channel that was just created to delete that channel and the role that gets created with the channel")
 
     if message.guild != None:
         if "bobby" in message.content.lower():
