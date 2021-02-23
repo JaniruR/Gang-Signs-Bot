@@ -181,6 +181,19 @@ async def download(ctx, *args):
         await ctx.send("This file was not found")
         await ctx.send("You may have forgotten the file extension or added an unecessary")
 
+@bot.command() #rusty time
+async def rusty_time(ctx, *args):
+    if len(args) == 0:
+        await ctx.send('<@!546941622106193930>')
+    else:
+        try:
+            a = int(args[0])
+            while a != 0:
+                await ctx.send('<@!546941622106193930>')
+                a -= 1
+        except:
+            await ctx.send("Lmao nice try")
+
 @bot.event
 async def on_voice_state_update(member, before, after,):
     channel = bot.get_channel(810100291147399198)
