@@ -209,7 +209,6 @@ async def spam_time(ctx, *args):
                 await message.delete()
 
 
-
 @bot.event
 async def on_voice_state_update(member, before, after,):
     channel = bot.get_channel(810100291147399198)
