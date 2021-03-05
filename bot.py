@@ -182,17 +182,33 @@ async def download(ctx, *args):
         await ctx.send("You may have forgotten the file extension or added an unecessary")
 
 @bot.command() #rusty time
-async def rusty_time(ctx, *args):
-    if len(args) == 0:
-        await ctx.send('<@!546941622106193930>')
+async def spam_time(ctx, *args):
+    await ctx.message.delete()
+    await asyncio.sleep(1)
+    if str(ctx.author) != "xemnas2004#4845":
+        await ctx.send("nice try lmao")
+        a = 10
+        while a != 0:
+            await ctx.send(ctx.author.mention)
+            a -= 1
     else:
         try:
-            a = int(args[0])
+            a = int(args[1])
             while a != 0:
-                await ctx.send('<@!546941622106193930>')
+                await ctx.send(args[0])
+                await asyncio.sleep(1)
                 a -= 1
         except:
-            await ctx.send("Lmao nice try")
+            if args[1] == "all":
+                message = await bot.get_channel(704120332486967299).send(args[0])
+                await message.delete()
+                await bot.get_channel(723788723380289537).send(args[0])
+                message = await bot.get_channel(704150302349197334).send(args[0])
+                await message.delete()
+                message = await bot.get_channel(704120570140295279).send(args[0])
+                await message.delete()
+
+
 
 @bot.event
 async def on_voice_state_update(member, before, after,):
