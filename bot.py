@@ -181,34 +181,6 @@ async def download(ctx, *args):
         await ctx.send("This file was not found")
         await ctx.send("You may have forgotten the file extension or added an unecessary")
 
-@bot.command() #rusty time
-async def spam_time(ctx, *args):
-    await ctx.message.delete()
-    await asyncio.sleep(1)
-    if str(ctx.author) != "xemnas2004#4845":
-        await ctx.send("nice try lmao")
-        a = 10
-        while a != 0:
-            await ctx.send(ctx.author.mention)
-            a -= 1
-    else:
-        try:
-            a = int(args[1])
-            while a != 0:
-                await ctx.send(args[0])
-                await asyncio.sleep(1)
-                a -= 1
-        except:
-            if args[1] == "all":
-                message = await bot.get_channel(704120332486967299).send(args[0])
-                await message.delete()
-                await bot.get_channel(723788723380289537).send(args[0])
-                message = await bot.get_channel(704150302349197334).send(args[0])
-                await message.delete()
-                message = await bot.get_channel(704120570140295279).send(args[0])
-                await message.delete()
-
-
 @bot.event
 async def on_voice_state_update(member, before, after,):
     channel = bot.get_channel(810100291147399198)
@@ -216,6 +188,7 @@ async def on_voice_state_update(member, before, after,):
         await channel.send(str(member.mention) + " has joined " + str(after.channel))
     if after.channel == None and before.channel != None and member != bot.user and not member.bot:
         await channel.send(str(member.mention) + " has left " + str(before.channel))
+
 
 @bot.event #when a message is received
 async def on_message(message):
