@@ -184,10 +184,13 @@ async def download(ctx, *args):
 @bot.event
 async def on_voice_state_update(member, before, after,):
     channel = bot.get_channel(810100291147399198)
-    if before.channel == None and after.channel != None and member != bot.user and not member.bot:
+    afk = bot.get_channel(820619174275448852)
+    if after.channel != afk and before.channel == None and after.channel != None and member != bot.user and not member.bot:
         await channel.send(str(member.mention) + " has joined " + str(after.channel))
-    if after.channel == None and before.channel != None and member != bot.user and not member.bot:
+    if  before.channel != afk and after.channel == None and before.channel != None and member != bot.user and not member.bot:
         await channel.send(str(member.mention) + " has left " + str(before.channel))
+
+
 
 
 @bot.event #when a message is received
