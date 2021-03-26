@@ -185,13 +185,12 @@ async def download(ctx, *args):
 async def on_voice_state_update(member, before, after,):
     channel = bot.get_channel(810100291147399198)
     afk = bot.get_channel(820619174275448852)
-    if after.channel != afk and before.channel == None and after.channel != None and member != bot.user and not member.bot:
-        await channel.send(str(member.mention) + " has joined " + str(after.channel))
-    if  before.channel != afk and after.channel == None and before.channel != None and member != bot.user and not member.bot:
-        await channel.send(str(member.mention) + " has left " + str(before.channel))
-
-
-
+    guild = bot.get_guild(704120332486967296)
+    if member.guild == guild and before.channel != afk and member != bot.user and not member.bot:
+        if after.channel != afk and before.channel == None and after.channel != None:
+            await channel.send(str(member.mention) + " has joined " + str(after.channel))
+        if  after.channel == None and before.channel != None:
+            await channel.send(str(member.mention) + " has left " + str(before.channel))
 
 @bot.event #when a message is received
 async def on_message(message):
@@ -295,7 +294,7 @@ async def on_message(message):
                 os.remove(filepath + "/events_" + str(message.author) + ".txt")
 
     if message.guild != None:
-        if "bobby" in message.content.lower():
+        if "bobby" in message.content.lower() or "poggers" in message.content.lower() or "pog" in message.content.lower():
             await message.add_reaction(":poggers:806108825018695681")
             await message.add_reaction("\U0001F1F5")
             await message.add_reaction("\U0001F1F4")
@@ -307,18 +306,6 @@ async def on_message(message):
             await pog.add_reaction("\U0001F1F4")
             await pog.add_reaction("\U0001F1EC")
             return
-        if "poggers" in message.content.lower() or "pog" in message.content.lower():
-             await message.add_reaction(":poggers:806108825018695681")
-             await message.add_reaction("\U0001F1F5")
-             await message.add_reaction("\U0001F1F4")
-             await message.add_reaction("\U0001F1EC")
-             await asyncio.sleep(1)
-             pog = await message.channel.send("Poggers")
-             await pog.add_reaction(":poggers:806108825018695681")
-             await pog.add_reaction("\U0001F1F5")
-             await pog.add_reaction("\U0001F1F4")
-             await pog.add_reaction("\U0001F1EC")
-             return
         await bot.process_commands(message)
 
 bot.run("ODA0MzI4MTA0MzY5NTg2MjA3" + ".YBKu6w.Rku0syKGmTGvYVuJ4jJ4ynQIe54") #client token is split in two sections to avoid dicord automatically picking it up and changing it
