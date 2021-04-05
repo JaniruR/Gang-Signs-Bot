@@ -26,7 +26,7 @@ def vc_test(person): #tests if the person doing the command is in a voice channe
 
 @bot.event #purely for console update
 async def on_ready():
-    print('logged in as {0.user}'.format(bot))
+    print('Logged in as {0.user}'.format(bot))
 
 @bot.command() #used for changing status of bot
 async def status(ctx, *args):
