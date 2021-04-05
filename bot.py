@@ -5,7 +5,7 @@ from discord.ext import commands
 from discord.utils import get
 
 filepath = os.path.dirname(os.path.abspath(__file__))
-bot = commands.Bot(command_prefix=[",", "lmao_got_em"])
+bot = commands.Bot(command_prefix=[","])
 bot.remove_command("help")
 
 def get_length(filename): #gets the length of an mp3 file
