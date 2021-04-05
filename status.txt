@@ -1,6 +1,6 @@
 Note: anything in square brackets can have any amount of words
 Play: ,status play [name of game]
-Stream: ,status stream [name of stream] [link to youtube or twitch link] (for a youtube link make sure it is www.youtube.com and not www.youtu.be)
+Stream: ,status stream [name of stream] [link to youtube or twitch link] (for a youtube link make sure it starts with www.youtube.com and not www.youtu.be)
 Listen: ,status listen [name of song]
 Watch: ,status watch [name of video]
 Reset: resets status
