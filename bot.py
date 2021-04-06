@@ -127,6 +127,8 @@ async def create_dm(ctx):
     dm = await ctx.author.create_dm() #creates the dm
     await dm.send("Type \"event\" in this dm to start creation of an event")
     await asyncio.sleep(1)
+    await dm.send("Unless you just wanna talk, you can talk to me")
+    await asyncio.sleep(1)
     await dm.send("For future reference, you can initiate this command straight from the dm next time by doing \"event\"")
 
 @bot.command() #creates a timer in seconds
