@@ -208,8 +208,7 @@ async def on_message(message):
             await message.channel.send("Like this:")
             await asyncio.sleep(0.5)
             await message.channel.send("name of event: my birthday")
-
-        if message.content[:15].lower() == "name of event: ":
+        elif message.content[:15].lower() == "name of event: ":
             event_name = message.content[15:]
             await message.channel.send("Okay, the name of the event is")
             await asyncio.sleep(0.5)
@@ -221,8 +220,7 @@ async def on_message(message):
             file.close()
             await asyncio.sleep(1)
             await message.channel.send("If this is correct, please type out a summary of the event (day/time isn't part of the summary) using \"summary: \" before the summary like last time (type the summary in one line please cuz it just makes it easier for me)")
-
-        if message.content[:9].lower() == "summary: ":
+        elif message.content[:9].lower() == "summary: ":
             details = []
             for i in open(filepath + "/events_" + str(message.author) + ".txt"):
                 details.append(i)
@@ -238,8 +236,7 @@ async def on_message(message):
             file.write(details[0] + "\n")
             file.write(event_summary)
             file.close()
-
-        if message.content.lower()[:6] == "time: ":
+        elif message.content.lower()[:6] == "time: ":
             details = []
             for i in open(filepath + "/events_" + str(message.author) + ".txt"):
                 details.append(i)
@@ -259,8 +256,7 @@ async def on_message(message):
             file.write("*" + str(time) + "*")
             file.close()
             await message.channel.send("Type \"details\" to see details about the event")
-
-        if message.content.lower() == "details":
+        elif message.content.lower() == "details":
             deets = []
             try:
                 for i in open(filepath + "/events_" + str(message.author) + ".txt"):
@@ -278,8 +274,7 @@ async def on_message(message):
                 await message.channel.send("Make sure these details are correct")
                 await asyncio.sleep(1)
                 await message.channel.send("type \"send event\" to send this event to the announcements tab")
-
-        if message.content.lower() == "send event":
+        elif message.content.lower() == "send event":
             final_deets = ""
             deets_count = []
             current_events = []
@@ -294,6 +289,12 @@ async def on_message(message):
                 await announce.add_reaction("\U0001F44D")
                 await message.add_reaction("\U0001F44D")
                 os.remove(filepath + "/events_" + str(message.author) + ".txt")
+        else:
+            await message.channel.send("You must be quite lonely to be talking to a bot lmao")
+            await asyncio.sleep(1)
+            await message.channel.send("Just kidding I'm assuming you mistyped something")
+            await asyncio.sleep(1)
+            await message.channel.send("Even if you are just lonely it's alright, I'll be here for you")
 
     if message.guild != None:
         if "bobby" in message.content.lower() or "poggers" in message.content.lower() or "pog" in message.content.lower():
