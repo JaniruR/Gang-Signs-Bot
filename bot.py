@@ -294,8 +294,8 @@ async def on_message(message):
                 os.remove(filepath + "/events_" + str(message.author) + ".txt")
 
     if message.guild != None:
-        if random.randint(1,4096) == 1:
-            await message.channel.send("Nice you got a shiny")
+        if random.randint(1,1000) == 1:
+            await message.reply("Nice you got a shiny message")
         if "bobby" in message.content.lower() or "poggers" in message.content.lower() or "pog" in message.content.lower():
             await message.add_reaction(":poggers:806108825018695681")
             await message.add_reaction("\U0001F1F5")
