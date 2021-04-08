@@ -172,7 +172,7 @@ async def speak(ctx, *args):
 
 @bot.command() #downloads file
 async def download(ctx, *args):
-    await ctx.send(args)
+    await ctx.send("".join(args))
     filename = args[0]
     try:
         with open(filepath + "/" + filename, "rb") as file:
