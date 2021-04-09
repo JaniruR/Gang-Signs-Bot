@@ -26,11 +26,7 @@ def vc_test(person): #tests if the person doing the command is in a voice channe
 
 @bot.event #purely for console update
 async def on_ready():
-<<<<<<< HEAD
-    print("Logged in as {0.user}".format(bot))
-=======
     print('Logged in as {0.user}'.format(bot))
->>>>>>> ebf04351e72ee810a4a3b8f4992d543f8f400ede
 
 @bot.command() #used for changing status of bot
 async def status(ctx, *args):
@@ -301,20 +297,24 @@ async def on_message(message):
             await message.channel.send("Even if you are just lonely it's alright, I'll be here for you")
 
     if message.guild != None:
-        if random.randint(1,1000) == 1:
-            await message.reply("Nice you got a shiny message")
-        if "bobby" in message.content.lower() or "poggers" in message.content.lower() or "pog" in message.content.lower():
-            await message.add_reaction(":poggers:806108825018695681")
-            await message.add_reaction("\U0001F1F5")
-            await message.add_reaction("\U0001F1F4")
-            await message.add_reaction("\U0001F1EC")
-            await asyncio.sleep(1)
-            pog = await message.channel.send("Poggers")
-            await pog.add_reaction(":poggers:806108825018695681")
-            await pog.add_reaction("\U0001F1F5")
-            await pog.add_reaction("\U0001F1F4")
-            await pog.add_reaction("\U0001F1EC")
-            return
-        await bot.process_commands(message)
+        if not message.author.bot:
+            print("user", message.content)
+            if random.randint(1,1000) == 1:
+                await message.reply("Nice you got a shiny message")
+            if "bobby" in message.content.lower() or "poggers" in message.content.lower() or "pog" in message.content.lower():
+                await message.add_reaction(":poggers:806108825018695681")
+                await message.add_reaction("\U0001F1F5")
+                await message.add_reaction("\U0001F1F4")
+                await message.add_reaction("\U0001F1EC")
+                await asyncio.sleep(1)
+                pog = await message.channel.send("Poggers")
+                await pog.add_reaction(":poggers:806108825018695681")
+                await pog.add_reaction("\U0001F1F5")
+                await pog.add_reaction("\U0001F1F4")
+                await pog.add_reaction("\U0001F1EC")
+                return
+            await bot.process_commands(message)
+        else:
+            print("bot", message.content)
 
 bot.run("ODA0MzI4MTA0MzY5NTg2MjA3" + ".YBKu6w.Rku0syKGmTGvYVuJ4jJ4ynQIe54") #client token is split in two sections to avoid dicord automatically picking it up and changing it
