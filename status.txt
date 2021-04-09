@@ -1,4 +1,4 @@
-Note: anything in square brackets can have any amount of words
+Note: anything in the square brackets can have any amount of words
 Play: ,status play [name of game]
 Stream: ,status stream [name of stream] [link to youtube or twitch link] (for a youtube link make sure it starts with www.youtube.com and not www.youtu.be)
 Listen: ,status listen [name of song]
