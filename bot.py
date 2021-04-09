@@ -27,6 +27,7 @@ def vc_test(person): #tests if the person doing the command is in a voice channe
 @bot.event #purely for console update
 async def on_ready():
     print('Logged in as {0.user}'.format(bot))
+    await bot.get_channel(805349681432887328).send("I'm online")
 
 @bot.command() #used for changing status of bot
 async def status(ctx, *args):
@@ -181,7 +182,7 @@ async def download(ctx, *args):
             await ctx.send("Here you go:", file=discord.File(file, filename)) #if the file is found, will send
     except FileNotFoundError: #the argument that was give was not found in the files list
         await ctx.send("This file was not found")
-        await ctx.send("You may have forgotten the file extension or added an unecessary")
+        await ctx.send("You may have forgotten the file extension")
 
 @bot.event
 async def on_voice_state_update(member, before, after,):
