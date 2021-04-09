@@ -27,6 +27,7 @@ def vc_test(person): #tests if the person doing the command is in a voice channe
 @bot.event #purely for console update
 async def on_ready():
     print('Logged in as {0.user}'.format(bot))
+    await bot.get_channel(805349681432887328).send("I'm online")
 
 @bot.command() #used for changing status of bot
 async def status(ctx, *args):
