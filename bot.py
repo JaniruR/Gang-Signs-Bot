@@ -298,7 +298,6 @@ async def on_message(message):
 
     if message.guild != None:
         if not message.author.bot:
-            print("user", message.content)
             if random.randint(1,1000) == 1:
                 await message.reply("Nice you got a shiny message")
             if "bobby" in message.content.lower() or "poggers" in message.content.lower() or "pog" in message.content.lower():
@@ -314,7 +313,11 @@ async def on_message(message):
                 await pog.add_reaction("\U0001F1EC")
                 return
             await bot.process_commands(message)
-        else:
-            print("bot", message.content)
 
-bot.run("ODA0MzI4MTA0MzY5NTg2MjA3" + ".YBKu6w" + ".PpJ6sd_" + "R3XrtHK93QmLATv1V6dE") #client token is split in two sections to avoid dicord automatically picking it up and changing it
+code = []
+
+for i in open(filepath + "/authentication_code.txt"):
+    code.append(i.strip())
+authenticator = "".join(code)
+print(authenticator)
+bot.run(authenticator)
