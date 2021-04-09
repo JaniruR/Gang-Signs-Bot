@@ -302,15 +302,8 @@ async def on_message(message):
                 await message.reply("Nice you got a shiny message")
             if "bobby" in message.content.lower() or "poggers" in message.content.lower() or "pog" in message.content.lower():
                 await message.add_reaction(":poggers:806108825018695681")
-                await message.add_reaction("\U0001F1F5")
-                await message.add_reaction("\U0001F1F4")
-                await message.add_reaction("\U0001F1EC")
                 await asyncio.sleep(1)
-                pog = await message.channel.send("Poggers")
-                await pog.add_reaction(":poggers:806108825018695681")
-                await pog.add_reaction("\U0001F1F5")
-                await pog.add_reaction("\U0001F1F4")
-                await pog.add_reaction("\U0001F1EC")
+                await message.channel.send("Poggers")
                 return
             await bot.process_commands(message)
 
@@ -319,5 +312,4 @@ code = []
 for i in open(filepath + "/authentication_code.txt"):
     code.append(i.strip())
 authenticator = "".join(code)
-print(authenticator)
 bot.run(authenticator)
