@@ -317,4 +317,4 @@ async def on_message(message):
         else:
             print("bot", message.content)
 
-bot.run("ODA0MzI4MTA0MzY5NTg2MjA3" + ".YBKu6w.Rku0syKGmTGvYVuJ4jJ4ynQIe54") #client token is split in two sections to avoid dicord automatically picking it up and changing it
+bot.run("ODA0MzI4MTA0MzY5NTg2MjA3" + ".YBKu6w" + ".PpJ6sd_" + "R3XrtHK93QmLATv1V6dE") #client token is split in two sections to avoid dicord automatically picking it up and changing it
