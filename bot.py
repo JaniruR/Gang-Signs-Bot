@@ -66,7 +66,8 @@ async def help(ctx, *args):
         embed.set_footer(text="Have a good day")
     if a == 0:
         embed.set_image(url="https://i.pinimg.com/originals/b5/80/a3/b580a383ce5cee47ab6156b0e84843cc.jpg")
-        embed.add_field(name="Please type a valid command", value="Lmao you didn't even type a vaild command", inline=False) #if there are 0 lines, adds a line to the embed telling user to type a valid command
+        embed.add_field(name="lmao look at this clownery of a message", value=ctx.message.content, inline=True)
+        embed.add_field(name="Please type a valid command", value="Lmao you didn't even type a vaild command", inline=True) #if there are 0 lines, adds a line to the embed telling user to type a valid command
         embed.set_footer(text="Lmao " + ctx.message.content + "? What kind of command is that?")
     embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url) #user name and profile picture
     await ctx.send(embed=embed) #sends the embed
@@ -319,5 +320,4 @@ code = []
 for i in open(filepath + "/authentication_code.txt"):
     code.append(i.strip())
 authenticator = "".join(code)
-print(authenticator)
 bot.run(authenticator)
