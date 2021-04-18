@@ -67,7 +67,8 @@ async def help(ctx, *args):
         embed.set_footer(text="Have a good day")
     if a == 0:
         embed.set_image(url="https://i.pinimg.com/originals/b5/80/a3/b580a383ce5cee47ab6156b0e84843cc.jpg")
-        embed.add_field(name="Please type a valid command", value="Lmao you didn't even type a vaild command", inline=False) #if there are 0 lines, adds a line to the embed telling user to type a valid command
+        embed.add_field(name="lmao look at this clownery of a message", value=ctx.message.content, inline=True)
+        embed.add_field(name="Please type a valid command", value="Lmao you didn't even type a vaild command", inline=True) #if there are 0 lines, adds a line to the embed telling user to type a valid command
         embed.set_footer(text="Lmao " + ctx.message.content + "? What kind of command is that?")
     embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url) #user name and profile picture
     await ctx.send(embed=embed) #sends the embed
@@ -227,6 +228,7 @@ async def on_message(message):
                 details.append(i)
             if len(details) == 0:
                 await message.channel.send("Lmao silly billy don't do the commands out of order")
+                return
             event_summary = message.content[9:]
             await message.channel.send("This is your event summary")
             await asyncio.sleep(0.5)
@@ -238,13 +240,13 @@ async def on_message(message):
             file.write(event_summary)
             file.close()
         elif message.content.lower()[:6] == "time: ":
-            details = []
+            current_details = []
             for i in open(filepath + "/events_" + str(message.author) + ".txt"):
-                details.append(i)
-            if len(details) == 0:
+                current_details.append(i)
+            if len(current_details) == 0:
                 await message.channel.send("Lmao you haven't even started the process, don't think I'm going to let you have the chance to break me")
                 return
-            if len(details) == 1:
+            if len(current_details) == 1:
                 await message.channel.send("You forgot to do a summary of the events. To add a summary type \"summary: \" followed by a summary (type it in one line please)")
                 return
             time = message.content[6:]
@@ -252,50 +254,52 @@ async def on_message(message):
             await asyncio.sleep(0.5)
             await message.channel.send(time)
             file = open(filepath + "/events_" + str(message.author) + ".txt", "w+")
-            file.write(details[0])
-            file.write(details[1] + "\n")
-            file.write("*" + str(time) + "*")
+            file.write(current_details[0])
+            file.write(current_details[1]+ "\n")
+            file.write(str(time))
             file.close()
             await message.channel.send("Type \"details\" to see details about the event")
         elif message.content.lower() == "details":
-            deets = []
+            details = []
             try:
                 for i in open(filepath + "/events_" + str(message.author) + ".txt"):
-                    deets.append(i)
+                    details.append(i)
             except FileNotFoundError:
                 await message.channel.send("You haven't even started yet smh")
                 return
-            if len(deets) == 3:
-                await message.channel.send("Event name: " + deets[0].lower())
+            if len(details) == 3:
+                await message.channel.send("Event name: " + details[0].lower())
                 await asyncio.sleep(1)
-                await message.channel.send("Event summary: " + deets[1])
+                await message.channel.send("Event summary: " + details[1])
                 await asyncio.sleep(1)
-                await message.channel.send("Time and date: " + deets[2])
+                await message.channel.send("Time and date: " + details[2])
                 await asyncio.sleep(2)
                 await message.channel.send("Make sure these details are correct")
                 await asyncio.sleep(1)
                 await message.channel.send("type \"send event\" to send this event to the announcements tab")
         elif message.content.lower() == "send event":
-            final_deets = ""
-            deets_count = []
-            current_events = []
+            event_details = []
             announcement = bot.get_channel(723788723380289537)
             for i in open(filepath + "/events_" + str(message.author) + ".txt"):
-                final_deets += i
-                deets_count.append(i)
-            if len(deets_count) < 3:
+                event_details.append(i)
+            if len(event_details) < 3:
                 await message.channel.send("Please finish typing all of the details")
             else:
-                await announcement.send(final_deets + "\n" + "@everyone. React with \U0001F44D to express interest in this event")
-                await announce.add_reaction("\U0001F44D")
+                print(event_details)
+                embed = discord.Embed(title=event_details[0], colour=random.randint(0,0xffffff))
                 await message.add_reaction("\U0001F44D")
+                embed.add_field(name="Summary", value=event_details[1], inline=False)
+                embed.add_field(name="Time", value=event_details[2], inline=False)
+                embed.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
+                embed.set_footer(text="React with \U0001F44D to express interest")
+                announce = await announcement.send(embed=embed)
+                await announcement.send("@everyone")
+                await announce.add_reaction("\U0001F44D")
                 os.remove(filepath + "/events_" + str(message.author) + ".txt")
         else:
-            await message.channel.send("You must be quite lonely to be talking to a bot lmao")
+            await message.channel.send("I'm assuming you mistyped something")
             await asyncio.sleep(1)
-            await message.channel.send("Just kidding I'm assuming you mistyped something")
-            await asyncio.sleep(1)
-            await message.channel.send("Even if you are just lonely it's alright, I'll be here for you")
+            await message.channel.send("If you are just lonely it's alright, I'll be here for you")
 
     if message.guild != None:
         if not message.author.bot:
