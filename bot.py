@@ -74,26 +74,25 @@ async def help(ctx, *args):
     await ctx.send(embed=embed) #sends the embed
 
 @bot.command() #send rawr_xd.mp3
-async def rawr_xd(ctx, *args):
-    if len(args) == 0:
-        if len(bot.voice_clients) != 0: #if bot is already saying something, skips the command
-            await ctx.send("Please wait for me to finish speaking")
-            return
-        if vc_test(ctx.author) == True:
-            vc = await ctx.author.voice.channel.connect()
-            vc.play(discord.FFmpegPCMAudio(filepath + "/rawr_xd.mp3")) #plays the audio through FFmpeg
-            await asyncio.sleep(float(get_length(filepath + "/rawr_xd.mp3")) + 0.00001) #waits for the mp3 file to finish
-            await vc.disconnect()
-        else:
-            await ctx.message.add_reaction("\U0001F606") #laughing emoji
-            await ctx.send("Join a voice channel and try again")
-            await asyncio.sleep(0.1)
-            await ctx.message.add_reaction(":emoji_3:805337017168297986") #red r
-            await ctx.message.add_reaction("\U0001F1E6") #a
-            await ctx.message.add_reaction("\U0001F1FC") #w
-            await ctx.message.add_reaction("\U0001F1F7") #r
-            await ctx.message.add_reaction("\U0001F1FD") #x
-            await ctx.message.add_reaction("\U0001F1E9") #d
+async def rawr_xd(ctx):
+    if len(bot.voice_clients) != 0: #if bot is already saying something, skips the command
+        await ctx.send("Please wait for me to finish speaking")
+        return
+    if vc_test(ctx.author) == True:
+        vc = await ctx.author.voice.channel.connect()
+        vc.play(discord.FFmpegPCMAudio(filepath + "/rawr_xd.mp3")) #plays the audio through FFmpeg
+        await asyncio.sleep(float(get_length(filepath + "/rawr_xd.mp3")) + 0.00001) #waits for the mp3 file to finish
+        await vc.disconnect()
+    else:
+        await ctx.message.add_reaction("\U0001F606") #laughing emoji
+        await ctx.send("Join a voice channel and try again")
+        await asyncio.sleep(0.1)
+        await ctx.message.add_reaction(":emoji_3:805337017168297986") #red r
+        await ctx.message.add_reaction("\U0001F1E6") #a
+        await ctx.message.add_reaction("\U0001F1FC") #w
+        await ctx.message.add_reaction("\U0001F1F7") #r
+        await ctx.message.add_reaction("\U0001F1FD") #x
+        await ctx.message.add_reaction("\U0001F1E9") #d
 
 @bot.command() #copies what you say
 async def parrot(ctx, *args):
