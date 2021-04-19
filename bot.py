@@ -193,45 +193,48 @@ async def on_message(text):
         return
 
     if text.content.lower() == "event":
-        details = []
-        await text.channel.send("Type the name of the event")
-        name = await bot.wait_for("message", check = lambda message: message.author == text.author and message.guild == None)
-        if name.content.lower() == "event" or name.content.lower() == "cancel":
-            return
-        await name.channel.send("This is the name of the event you chose")
-        await name.channel.send(name.content)
-        await name.channel.send("Now type a short summary of the event (don't include the time/date in the summary)")
-        details.append(name.content)
-        summary = await bot.wait_for("message", check = lambda message: message.author == text.author and message.guild == None)
-        if summary.content.lower() == "event" or name.content.lower() == "cancel":
-            return
-        await summary.channel.send("This is the summary of the event you made")
-        await name.channel.send(summary.content)
-        await summary.channel.send("Now type the date and time of your event")
-        details.append(summary.content)
-        time = await bot.wait_for("message", check = lambda message: message.author == text.author and message.guild == None)
-        if time.content.lower() == "event" or name.content.lower() == "cancel":
-            return
-        details.append(time.content)
-        await time.channel.send("Name of event: " + str(details[0]))
-        await time.channel.send("Summary of event: " + str(details[1]))
-        await time.channel.send("Time: " + str(details[2]))
-        await time.channel.send("If these details are correct, send \"send event\" to send the event, else type \"event\" to restart the process or \"cancel\" to cancel")
-        event = await bot.wait_for("message", check = lambda message: message.author == text.author and message.guild == None)
-        if event.content.lower() == "event" or name.content.lower() == "cancel":
-            return
-        else:
-            if event.content.lower() == "send event":
-                announcement = bot.get_channel(723788723380289537)
-                embed = discord.Embed(title=details[0], colour=random.randint(0,0xffffff))
-                await event.add_reaction("\U0001F44D")
-                embed.add_field(name="Summary", value=details[1], inline=False)
-                embed.add_field(name="Time", value=details[2], inline=False)
-                embed.set_author(name=event.author.display_name, icon_url=event.author.avatar_url)
-                embed.set_footer(text="React with \U0001F44D to express interest")
-                announce = await announcement.send(embed=embed)
-                await announcement.send("@everyone")
-                await announce.add_reaction("\U0001F44D")
+        try:
+            details = []
+            await text.channel.send("Type the name of the event")
+            name = await bot.wait_for("message", check = lambda message: message.author == text.author and message.guild == None, timeout=30.0)
+            if name.content.lower() == "event" or name.content.lower() == "cancel":
+                return
+            await name.channel.send("This is the name of the event you chose")
+            await name.channel.send(name.content)
+            await name.channel.send("Now type a short summary of the event (don't include the time/date in the summary)")
+            details.append(name.content)
+            summary = await bot.wait_for("message", check = lambda message: message.author == text.author and message.guild == None, timeout=60.0)
+            if summary.content.lower() == "event" or name.content.lower() == "cancel":
+                return
+            await summary.channel.send("This is the summary of the event you made")
+            await name.channel.send(summary.content)
+            await summary.channel.send("Now type the date and time of your event")
+            details.append(summary.content)
+            time = await bot.wait_for("message", check = lambda message: message.author == text.author and message.guild == None, timeout=30.0)
+            if time.content.lower() == "event" or name.content.lower() == "cancel":
+                return
+            details.append(time.content)
+            await time.channel.send("Name of event: " + str(details[0]))
+            await time.channel.send("Summary of event: " + str(details[1]))
+            await time.channel.send("Time: " + str(details[2]))
+            await time.channel.send("If these details are correct, send \"send event\" to send the event, else type \"event\" to restart the process or \"cancel\" to cancel")
+            event = await bot.wait_for("message", check = lambda message: message.author == text.author and message.guild == None, timeout=30.0)
+            if event.content.lower() == "event" or name.content.lower() == "cancel":
+                return
+            else:
+                if event.content.lower() == "send event":
+                    announcement = bot.get_channel(723788723380289537)
+                    embed = discord.Embed(title=details[0], colour=random.randint(0,0xffffff))
+                    await event.add_reaction("\U0001F44D")
+                    embed.add_field(name="Summary", value=details[1], inline=False)
+                    embed.add_field(name="Time", value=details[2], inline=False)
+                    embed.set_author(name=event.author.display_name, icon_url=event.author.avatar_url)
+                    embed.set_footer(text="React with \U0001F44D to express interest")
+                    announce = await announcement.send(embed=embed)
+                    await announcement.send("@everyone")
+                    await announce.add_reaction("\U0001F44D")
+        except asyncio.TimeoutError:
+            await text.channel.send("Sorry you took too long")
 
     if text.guild != None:
         if not text.author.bot:
