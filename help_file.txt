@@ -1,8 +1,8 @@
-create_dm: Creates a dm between you and the bot (preferably so you can create an event announcement)
 help: Shows this message
+event: Helps to create an event to be announced in announcements
 parrot: Deletes your message and sends the message from the bot
 rawr_xd: Plays rawr_xd.mp3
-ree: activates the ree machine
-speak: speaks the desired phrase into the voice channel you are connected to
-status: change the status of the bot
-timer: activates a timer
+ree: Activates the ree machine
+speak: Speaks the desired phrase into the voice channel you are connected to
+status: Change the status of the bot
+timer: Activates a timer

@@ -1,4 +1,4 @@
-create_dm: After the bot creates a dm with you, it will walk you through how to create an event. This event will then be put in the announcements tab of Gang Signs Official Discord
+event: After the bot creates a dm with you, it will walk you through how to create an event. This event will then be put in the announcements tab of Gang Signs Official Discord
 parrot: Will delete your message and then send your message from the bot
 rawr_xd: Will play rawr_xd.mp3 in the voice channel that you are in (if you are in a voice channel). This audio file was obtained through the use of Google's Text-To-Speech engine.
 ree: Sends a ree with the amount of e's you specify and then deletes your command message. You can also mention someone like this (,ree 2 <@mention>) to mention them after the ree has been sent. If you mention a person to include them in said ree, there is a random chance that you are exposed for your actions
