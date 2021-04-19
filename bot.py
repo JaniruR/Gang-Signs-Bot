@@ -102,36 +102,27 @@ async def parrot(ctx, *args):
     await ctx.send(" ".join(args))
 
 @bot.command() #sends a ree
-async def ree(ctx, *args):
+async def ree(ctx, amount):
     try:
-        if args[0].isnumeric() == False:
+        if amount.isnumeric() == False:
             await ctx.send("Type a vaild number")
         else:
-            if int(args[0]) < 2000:
-                await ctx.send("r" + "e"*int(args[0]))
+            if int(amount) < 2000:
+                await ctx.send("r" + "e"*int(amount))
             else:
                 await ctx.message.add_reaction("emoji_3:805337017168297986")
                 await ctx.message.add_reaction("<:emoji_2:805336901644320778>")
                 await ctx.message.add_reaction(":emoji_1:805336868077830175")
                 await ctx.send("Lmao that's too many e's even for me")
-            if len(args) == 2:
-                if args[1][:2] == "<@":
-                    await ctx.message.delete()
-                    await asyncio.sleep(1)
-                    await ctx.send(args[1])
-                    if random.choice(["0","1"]) != "0": #author will have a 50% chance of being exposed
-                        await ctx.send(ctx.author.mention + " was the one who mentioned you btw")
     except IndexError: #an argument was not supplied
         await ctx.send("Please type a number of e's to send")
 
 @bot.command() #creates a dm with you
-async def create_dm(ctx):
+async def event(ctx):
     dm = await ctx.author.create_dm() #creates the dm
-    await dm.send("Type \"event\" in this dm to start creation of an event")
+    await dm.send("Hello there, type \"event\" to get started")
     await asyncio.sleep(1)
-    await dm.send("Unless you just wanna talk, you can talk to me")
-    await asyncio.sleep(1)
-    await dm.send("For future reference, you can initiate this command straight from the dm next time by doing \"event\"")
+    await dm.send("Note that you can also type \"event\" to restart the process if you ever type something wrong or \"cancel\" to stop the process completely")
 
 @bot.command() #creates a timer in seconds
 async def timer(ctx, seconds):
@@ -197,120 +188,61 @@ async def on_voice_state_update(member, before, after,):
             await channel.send(str(member.mention) + " has left " + str(before.channel))
 
 @bot.event #when a message is received
-async def on_message(message):
-    if message.author == bot.user:
+async def on_message(text):
+    if text.author == bot.user:
         return
 
-    if message.guild == None:
-        if message.content[:5] == "event":
-            await message.channel.send("I see you would like to start an event?")
-            await asyncio.sleep(0.5)
-            await message.channel.send("I'm not very smart so I don't understand context (I would also like it if you don't try to do these commands out of order cuz I'm not very smart), if you really want to start an event, type \"name of event: \" before your next sentence to type in the name of the event")
-            await asyncio.sleep(1)
-            await message.channel.send("Like this:")
-            await asyncio.sleep(0.5)
-            await message.channel.send("name of event: my birthday")
-        elif message.content[:15].lower() == "name of event: ":
-            event_name = message.content[15:]
-            await message.channel.send("Okay, the name of the event is")
-            await asyncio.sleep(0.5)
-            await message.channel.send(event_name)
-            await asyncio.sleep(0.5)
-            await message.channel.send("If this is wrong, please do the event message again")
-            file = open(filepath + "/events_" + str(message.author) + ".txt", "w+")
-            file.write(event_name.upper())
-            file.close()
-            await asyncio.sleep(1)
-            await message.channel.send("If this is correct, please type out a summary of the event (day/time isn't part of the summary) using \"summary: \" before the summary like last time (type the summary in one line please cuz it just makes it easier for me)")
-        elif message.content[:9].lower() == "summary: ":
-            details = []
-            for i in open(filepath + "/events_" + str(message.author) + ".txt"):
-                details.append(i)
-            if len(details) == 0:
-                await message.channel.send("Lmao silly billy don't do the commands out of order")
-                return
-            event_summary = message.content[9:]
-            await message.channel.send("This is your event summary")
-            await asyncio.sleep(0.5)
-            await message.channel.send(event_summary)
-            await asyncio.sleep(0.5)
-            await message.channel.send("If this is correct, type \"time: \" to add the date and time")
-            file = open(filepath + "/events_" + str(message.author) + ".txt", "w+")
-            file.write(details[0] + "\n")
-            file.write(event_summary)
-            file.close()
-        elif message.content.lower()[:6] == "time: ":
-            current_details = []
-            for i in open(filepath + "/events_" + str(message.author) + ".txt"):
-                current_details.append(i)
-            if len(current_details) == 0:
-                await message.channel.send("Lmao you haven't even started the process, don't think I'm going to let you have the chance to break me")
-                return
-            if len(current_details) == 1:
-                await message.channel.send("You forgot to do a summary of the events. To add a summary type \"summary: \" followed by a summary (type it in one line please)")
-                return
-            time = message.content[6:]
-            await message.channel.send("This is the date and time that you have input")
-            await asyncio.sleep(0.5)
-            await message.channel.send(time)
-            file = open(filepath + "/events_" + str(message.author) + ".txt", "w+")
-            file.write(current_details[0])
-            file.write(current_details[1]+ "\n")
-            file.write(str(time))
-            file.close()
-            await message.channel.send("Type \"details\" to see details about the event")
-        elif message.content.lower() == "details":
-            details = []
-            try:
-                for i in open(filepath + "/events_" + str(message.author) + ".txt"):
-                    details.append(i)
-            except FileNotFoundError:
-                await message.channel.send("You haven't even started yet smh")
-                return
-            if len(details) == 3:
-                await message.channel.send("Event name: " + details[0].lower())
-                await asyncio.sleep(1)
-                await message.channel.send("Event summary: " + details[1])
-                await asyncio.sleep(1)
-                await message.channel.send("Time and date: " + details[2])
-                await asyncio.sleep(2)
-                await message.channel.send("Make sure these details are correct")
-                await asyncio.sleep(1)
-                await message.channel.send("type \"send event\" to send this event to the announcements tab")
-        elif message.content.lower() == "send event":
-            event_details = []
-            announcement = bot.get_channel(723788723380289537)
-            for i in open(filepath + "/events_" + str(message.author) + ".txt"):
-                event_details.append(i)
-            if len(event_details) < 3:
-                await message.channel.send("Please finish typing all of the details")
-            else:
-                print(event_details)
-                embed = discord.Embed(title=event_details[0], colour=random.randint(0,0xffffff))
-                await message.add_reaction("\U0001F44D")
-                embed.add_field(name="Summary", value=event_details[1], inline=False)
-                embed.add_field(name="Time", value=event_details[2], inline=False)
-                embed.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
+    if text.content.lower() == "event":
+        details = []
+        await text.channel.send("Type the name of the event")
+        name = await bot.wait_for("message", check = lambda message: message.author == text.author and message.guild == None)
+        if name.content.lower() == "event" or name.content.lower() == "cancel":
+            return
+        await name.channel.send("This is the name of the event you chose")
+        await name.channel.send(name.content)
+        await name.channel.send("Now type a short summary of the event (don't include the time/date in the summary)")
+        details.append(name.content)
+        summary = await bot.wait_for("message", check = lambda message: message.author == text.author and message.guild == None)
+        if summary.content.lower() == "event" or name.content.lower() == "cancel":
+            return
+        await summary.channel.send("This is the summary of the event you made")
+        await name.channel.send(summary.content)
+        await summary.channel.send("Now type the date and time of your event")
+        details.append(summary.content)
+        time = await bot.wait_for("message", check = lambda message: message.author == text.author and message.guild == None)
+        if time.content.lower() == "event" or name.content.lower() == "cancel":
+            return
+        details.append(time.content)
+        await time.channel.send("Name of event: " + str(details[0]))
+        await time.channel.send("Summary of event: " + str(details[1]))
+        await time.channel.send("Time: " + str(details[2]))
+        await time.channel.send("If these details are correct, send \"send event\" to send the event, else type \"event\" to restart the process or \"cancel\" to cancel")
+        event = await bot.wait_for("message", check = lambda message: message.author == text.author and message.guild == None)
+        if event.content.lower() == "event" or name.content.lower() == "cancel":
+            return
+        else:
+            if event.content.lower() == "send event":
+                announcement = bot.get_channel(723788723380289537)
+                embed = discord.Embed(title=details[0], colour=random.randint(0,0xffffff))
+                await event.add_reaction("\U0001F44D")
+                embed.add_field(name="Summary", value=details[1], inline=False)
+                embed.add_field(name="Time", value=details[2], inline=False)
+                embed.set_author(name=event.author.display_name, icon_url=event.author.avatar_url)
                 embed.set_footer(text="React with \U0001F44D to express interest")
                 announce = await announcement.send(embed=embed)
                 await announcement.send("@everyone")
                 await announce.add_reaction("\U0001F44D")
-                os.remove(filepath + "/events_" + str(message.author) + ".txt")
-        else:
-            await message.channel.send("I'm assuming you mistyped something")
-            await asyncio.sleep(1)
-            await message.channel.send("If you are just lonely it's alright, I'll be here for you")
 
-    if message.guild != None:
-        if not message.author.bot:
+    if text.guild != None:
+        if not text.author.bot:
             if random.randint(1,1000) == 1:
-                await message.reply("Nice you got a shiny message")
-            if "bobby" in message.content.lower() or "poggers" in message.content.lower() or "pog" in message.content.lower():
-                await message.add_reaction(":poggers:806108825018695681")
+                await text.reply("Nice you got a shiny message")
+            if "bobby" in text.content.lower() or "poggers" in text.content.lower() or "pog" in text.content.lower():
+                await text.add_reaction(":poggers:806108825018695681")
                 await asyncio.sleep(1)
-                await message.channel.send("Poggers")
+                await text.channel.send("Poggers")
                 return
-            await bot.process_commands(message)
+            await bot.process_commands(text)
 
 code = []
 
