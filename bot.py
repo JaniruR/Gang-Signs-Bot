@@ -66,7 +66,7 @@ async def help(ctx, *args):
     embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url) #user name and profile picture
     await ctx.send(embed=embed) #sends the embed
 
-@bot.command() #creates a dm with you
+@bot.command() #starts the event making sequence
 async def event(ctx):
     dm = await ctx.author.create_dm() #creates the dm
     await dm.send("Hello there, type \"event\" to get started")
