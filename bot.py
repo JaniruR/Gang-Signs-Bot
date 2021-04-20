@@ -245,6 +245,5 @@ async def on_message(text):
                 return
             await bot.process_commands(text)
 
-if __name__ == "__main__":
-    import config
-    bot.run(config.token)
+import config
+bot.run(config.token)
