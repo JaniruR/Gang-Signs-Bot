@@ -245,5 +245,4 @@ async def on_message(text):
                 return
             await bot.process_commands(text)
 
-import config
-bot.run(config.token)
+bot.run(DISCORD_BOT_TOKEN)
