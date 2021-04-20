@@ -245,9 +245,6 @@ async def on_message(text):
                 return
             await bot.process_commands(text)
 
-#authentication code method
-code = []
-for i in open(filepath + "/authentication_code.txt"):
-    code.append(i.strip())
-authenticator = "".join(code)
-bot.run(authenticator)
+if __name__ == "__main__":
+    import config
+    client.run(config.token)
