@@ -24,23 +24,16 @@ def vc_test(person): #tests if the person doing the command is in a voice channe
         result = True
     return result
 
-@bot.event #purely for console update
-async def on_ready():
-    print('Logged in as {0.user}'.format(bot))
-    await bot.get_channel(805349681432887328).send("I'm online")
-
-@bot.command() #used for changing status of bot
-async def status(ctx, *args):
-    if args[0] == "play":
-        await bot.change_presence(activity=discord.Game(" ".join(args[1:])))
-    if args[0] == "stream":
-        await bot.change_presence(activity=discord.Streaming(name=" ".join(args[1:-1]), url=args[-1]))
-    if args[0] == "listen":
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=" ".join(args[1:])))
-    if args[0] == "watch":
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" ".join(args[1:])))
-    if args[0] == "reset":
-        await bot.change_presence(activity=None, status=None)
+@bot.command() #downloads file
+async def download(ctx, *args):
+    await ctx.send("".join(args)) #combines the text into one string
+    filename = args[0] #downloads the file with that string
+    try:
+        with open(filepath + "/" + filename, "rb") as file:
+            await ctx.send("Here you go:", file=discord.File(file, filename)) #if the file is found, will send
+    except FileNotFoundError: #the argument that was give was not found in the files list
+        await ctx.send("This file was not found")
+        await ctx.send("You may have forgotten the file extension")
 
 @bot.command() #help command
 async def help(ctx, *args):
@@ -73,6 +66,19 @@ async def help(ctx, *args):
     embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url) #user name and profile picture
     await ctx.send(embed=embed) #sends the embed
 
+@bot.command() #creates a dm with you
+async def event(ctx):
+    dm = await ctx.author.create_dm() #creates the dm
+    await dm.send("Hello there, type \"event\" to get started")
+    await asyncio.sleep(1)
+    await dm.send("Note that you can also type \"event\" to restart the process if you ever type something wrong or \"cancel\" to stop the process completely")
+
+@bot.command() #copies what you say
+async def parrot(ctx, *args):
+    await ctx.message.delete()
+    await asyncio.sleep(1)
+    await ctx.send(" ".join(args))
+
 @bot.command() #send rawr_xd.mp3
 async def rawr_xd(ctx):
     if len(bot.voice_clients) != 0: #if bot is already saying something, skips the command
@@ -94,12 +100,6 @@ async def rawr_xd(ctx):
         await ctx.message.add_reaction("\U0001F1FD") #x
         await ctx.message.add_reaction("\U0001F1E9") #d
 
-@bot.command() #copies what you say
-async def parrot(ctx, *args):
-    await ctx.message.delete()
-    await asyncio.sleep(1)
-    await ctx.send(" ".join(args))
-
 @bot.command() #sends a ree
 async def ree(ctx, amount):
     try:
@@ -116,12 +116,37 @@ async def ree(ctx, amount):
     except IndexError: #an argument was not supplied
         await ctx.send("Please type a number of e's to send")
 
-@bot.command() #creates a dm with you
-async def event(ctx):
-    dm = await ctx.author.create_dm() #creates the dm
-    await dm.send("Hello there, type \"event\" to get started")
-    await asyncio.sleep(1)
-    await dm.send("Note that you can also type \"event\" to restart the process if you ever type something wrong or \"cancel\" to stop the process completely")
+@bot.command() #says a random slur
+async def slur(ctx):
+    await ctx.send(random.choice(["Turbinator", "Pinunderjip", "Kuthi", "Macaca", "Kalu", "Ganesh"]))
+
+@bot.command() #speaks your word/phrase aloud
+async def speak(ctx, *args):
+    speech = " ".join(args)
+    if len(bot.voice_clients) != 0: #checks if the bot is in a voice channel, returns if in a voice channel
+        await ctx.send("Please wait for me to finish speaking")
+        return
+    try:
+        gTTS(speech).save("message.mp3") #runs the text in Google's tts engine and saves it as "message.mp3"
+        vc = await ctx.author.voice.channel.connect() #joins the voice channel that the user is in
+        vc.play(discord.FFmpegPCMAudio("message.mp3")) #plays "message.mp3" through FFmpeg
+        await asyncio.sleep(float(get_length("message.mp3")) + 0.0001) #waits 0.0001 seconds after message.mp3 is finished before leaving
+        await vc.disconnect() #leaves
+    except AttributeError: #user isn't in a voice channel
+        await ctx.send("Join a voice channel and try again")
+
+@bot.command() #used for changing status of bot
+async def status(ctx, *args):
+    if args[0] == "play":
+        await bot.change_presence(activity=discord.Game(" ".join(args[1:])))
+    if args[0] == "stream":
+        await bot.change_presence(activity=discord.Streaming(name=" ".join(args[1:-1]), url=args[-1]))
+    if args[0] == "listen":
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=" ".join(args[1:])))
+    if args[0] == "watch":
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" ".join(args[1:])))
+    if args[0] == "reset":
+        await bot.change_presence(activity=None, status=None)
 
 @bot.command() #creates a timer in seconds
 async def timer(ctx, seconds):
@@ -145,37 +170,11 @@ async def timer(ctx, seconds):
     except ValueError:
         await ctx.send("Must be a number!")
 
-@bot.command() #says a random slur
-async def slur(ctx):
-    await ctx.send(random.choice(["Turbinator", "Pinunderjip", "Kuthi", "Macaca", "Kalu", "Ganesh"]))
+@bot.event #purely for console update
+async def on_ready():
+    print('Logged in as {0.user}'.format(bot))
 
-@bot.command() #speaks your word/phrase aloud
-async def speak(ctx, *args):
-    speech = " ".join(args)
-    if len(bot.voice_clients) != 0: #checks if the bot is in a voice channel, returns if in a voice channel
-        await ctx.send("Please wait for me to finish speaking")
-        return
-    try:
-        gTTS(speech).save("message.mp3") #runs the text in Google's tts engine and saves it as "message.mp3"
-        vc = await ctx.author.voice.channel.connect() #joins the voice channel that the user is in
-        vc.play(discord.FFmpegPCMAudio("message.mp3")) #plays "message.mp3" through FFmpeg
-        await asyncio.sleep(float(get_length("message.mp3")) + 0.0001) #waits 0.0001 seconds after message.mp3 is finished before leaving
-        await vc.disconnect() #leaves
-    except AttributeError: #user isn't in a voice channel
-        await ctx.send("Join a voice channel and try again")
-
-@bot.command() #downloads file
-async def download(ctx, *args):
-    await ctx.send("".join(args))
-    filename = args[0]
-    try:
-        with open(filepath + "/" + filename, "rb") as file:
-            await ctx.send("Here you go:", file=discord.File(file, filename)) #if the file is found, will send
-    except FileNotFoundError: #the argument that was give was not found in the files list
-        await ctx.send("This file was not found")
-        await ctx.send("You may have forgotten the file extension")
-
-@bot.event
+@bot.event #sees when someone joins or leaves a voice channel in the server
 async def on_voice_state_update(member, before, after,):
     channel = bot.get_channel(810100291147399198)
     afk = bot.get_channel(820619174275448852)
@@ -246,8 +245,8 @@ async def on_message(text):
                 return
             await bot.process_commands(text)
 
+#authentication code method
 code = []
-
 for i in open(filepath + "/authentication_code.txt"):
     code.append(i.strip())
 authenticator = "".join(code)
