@@ -247,4 +247,4 @@ async def on_message(text):
 
 if __name__ == "__main__":
     import config
-    client.run(config.token)
+    bot.run(config.token)
