@@ -1,4 +1,4 @@
-import discord, os, sys, ffmpeg, subprocess, asyncio, random, gtts, json
+import discord, os, sys, ffmpeg, subprocess, asyncio, random, gtts
 from gtts import gTTS
 from discord import utils
 from discord.ext import commands
@@ -245,16 +245,4 @@ async def on_message(text):
                 return
             await bot.process_commands(text)
 
-if os.path.exists(os.getcwd() + "/config.json"):
-    with open("./config.json") as f:
-        configData = json.load(f)
-
-else:
-    configTemplate = {"Token": ""}
-
-    with open(os.getcwd() + "/config.json", "w+") as f:
-        json.dump(configTemplate, f)
-
-token = configData["Token"]
-
-bot.run(token)
+bot.run(os.environ["BOT_TOKEN"])
