@@ -243,6 +243,12 @@ async def on_message(text):
                 await asyncio.sleep(1)
                 await text.channel.send("Poggers")
                 return
+            elif "fuck" in text.content.lower():
+                await text.add_reaction("\U0001F1EB")
+                await text.add_reaction("\U0001F1FA")
+                await text.add_reaction("\U0001F1E8")
+                await text.add_reaction("\U0001F1F0")
+
             await bot.process_commands(text)
 
 bot.run(os.environ["BOT_TOKEN"])
