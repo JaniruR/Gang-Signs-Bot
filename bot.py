@@ -273,8 +273,8 @@ async def on_message(text):
                 await text.add_reaction(":poggers:806108825018695681")
                 await asyncio.sleep(1)
                 await text.channel.send("Poggers")
-                return
-            elif "fuck" in text.content.lower():
+                await asyncio.sleep(1)
+            if "fuck" in text.content.lower():
                 await text.add_reaction("🇫")
                 await text.add_reaction("🇺")
                 await text.add_reaction("🇨")
@@ -282,6 +282,10 @@ async def on_message(text):
                 if "fucker" in text.content.lower():
                     await text.add_reaction("🇪")
                     await text.add_reaction("🇷")
+                await asyncio.sleep(1)
+            if "choir" in text.content.lower():
+                await text.add_reaction("🤮")
+                await asyncio.sleep(1)
 
             await bot.process_commands(text)
 
