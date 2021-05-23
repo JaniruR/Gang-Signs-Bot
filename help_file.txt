@@ -6,3 +6,4 @@ ree: Activates the ree machine
 speak: Speaks the desired phrase into the voice channel you are connected to
 status: Change the status of the bot
 timer: Activates a timer
+twenty_one: Starts the beloved game of twenty one

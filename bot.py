@@ -90,15 +90,15 @@ async def rawr_xd(ctx):
         await asyncio.sleep(float(get_length(filepath + "/rawr_xd.mp3")) + 0.00001) #waits for the mp3 file to finish
         await vc.disconnect()
     else:
-        await ctx.message.add_reaction("\U0001F606") #laughing emoji
+        await ctx.message.add_reaction("😆") #laughing emoji
         await ctx.send("Join a voice channel and try again")
         await asyncio.sleep(0.1)
         await ctx.message.add_reaction(":emoji_3:805337017168297986") #red r
-        await ctx.message.add_reaction("\U0001F1E6") #a
-        await ctx.message.add_reaction("\U0001F1FC") #w
-        await ctx.message.add_reaction("\U0001F1F7") #r
-        await ctx.message.add_reaction("\U0001F1FD") #x
-        await ctx.message.add_reaction("\U0001F1E9") #d
+        await ctx.message.add_reaction("🇦") #a
+        await ctx.message.add_reaction("🇼") #w
+        await ctx.message.add_reaction("🇷") #r
+        await ctx.message.add_reaction("🇽") #x
+        await ctx.message.add_reaction("🇩") #d
 
 @bot.command() #sends a ree
 async def ree(ctx, amount):
@@ -115,10 +115,6 @@ async def ree(ctx, amount):
                 await ctx.send("Lmao that's too many e's even for me")
     except IndexError: #an argument was not supplied
         await ctx.send("Please type a number of e's to send")
-
-@bot.command() #says a random slur
-async def slur(ctx):
-    await ctx.send(random.choice(["Turbinator", "Pinunderjip", "Kuthi", "Macaca", "Kalu", "Ganesh"]))
 
 @bot.command() #speaks your word/phrase aloud
 async def speak(ctx, *args):
@@ -170,6 +166,40 @@ async def timer(ctx, seconds):
     except ValueError:
         await ctx.send("Must be a number!")
 
+@bot.command()
+async def twenty_one(ctx):
+    a = 0
+    await ctx.send("React with 1, 2 or 3 to input")
+    score = await ctx.send(a)
+    while a < 21:
+        await score.add_reaction(":1_:838715568453451826")
+        await score.add_reaction(":2_:838715587169484800")
+        await score.add_reaction(":3_:838715605863104572")
+        try:
+            input, user = await bot.wait_for("reaction_add", check = lambda r, u: u.id == ctx.author.id and r.message.id == score.id, timeout = 10.0)
+        except:
+            await ctx.send("K fine I'll just leave then")
+            return
+        await score.clear_reactions()
+        if str(input) == "<:1_:838715568453451826>":
+            a += 1
+        elif str(input) == "<:2_:838715587169484800>":
+            a += 2
+        elif str(input) == "<:3_:838715605863104572>":
+            a += 3
+        else:
+            await ctx.send("I can't deal with this bullshit, I'm out")
+        if a > 20:
+            await ctx.send("Well done, you lost")
+        await score.edit(content=a)
+        a += random.choice([1,2,3])
+        await score.edit(content=a)
+        if a > 20:
+            await ctx.send("Oh, I lost")
+
+@bot.command()
+async def test(ctx):
+    await ctx.send("🟧")
 @bot.event #purely for console update
 async def on_ready():
     print('Logged in as {0.user}'.format(bot))
@@ -194,41 +224,45 @@ async def on_message(text):
         try:
             details = []
             await text.channel.send("Type the name of the event")
-            detail = text
-            a = 0
-            while detail.content.lower() != "cancel":
-                detail = await bot.wait_for("message", check = lambda message: message.author == text.author and message.guild == None, timeout=30.0)
-                details.append(detail.content.lower())
-                if detail.content.lower() == "cancel":
-                    await detail.add_reaction("\U0001F44D")
-                if detail.content.lower() == "event":
-                    return
-                elif a == 0:
-                    await detail.channel.send("This is the name of the event you chose")
-                    await detail.channel.send(detail.content)
-                    await detail.channel.send("Now type a short summary of the event (don't include the time/date in the summary)")
-                elif a == 1:
-                    await detail.channel.send("This is the summary of the event you made")
-                    await detail.channel.send(detail.content)
-                    await detail.channel.send("Now type the date and time of your event")
-                elif a == 2:
-                    await detail.channel.send("Name of event: " + str(details[0]))
-                    await detail.channel.send("Summary of event: " + str(details[1]))
-                    await detail.channel.send("Time: " + str(details[2]))
-                    await detail.channel.send("If these details are correct, send \"send event\" to send the event, else type \"event\" to restart the process or \"cancel\" to cancel")
-                elif a == 3:
-                    if detail.content.lower() == "send event":
-                        announcement = bot.get_channel(723788723380289537)
-                        embed = discord.Embed(title=details[0], colour=random.randint(0,0xffffff))
-                        await detail.add_reaction("\U0001F44D")
-                        embed.add_field(name="Summary", value=details[1], inline=False)
-                        embed.add_field(name="Time", value=details[2], inline=False)
-                        embed.set_author(name=detail.author.display_name, icon_url=detail.author.avatar_url)
-                        embed.set_footer(text="React with \U0001F44D to express interest")
-                        announce = await announcement.send(embed=embed)
-                        await announcement.send("@everyone")
-                        await announce.add_reaction("\U0001F44D")
-                a += 1
+            name = await bot.wait_for("message", check = lambda message: message.author == text.author and message.guild == None, timeout=30.0)
+            if name.content.lower() == "event" or name.content.lower() == "cancel":
+                return
+            await name.channel.send("This is the name of the event you chose")
+            await name.channel.send(name.content)
+            await name.channel.send("Now type a short summary of the event (don't include the time/date in the summary)")
+            details.append(name.content)
+            summary = await bot.wait_for("message", check = lambda message: message.author == text.author and message.guild == None, timeout=60.0)
+            if summary.content.lower() == "event" or name.content.lower() == "cancel":
+                return
+            await summary.channel.send("This is the summary of the event you made")
+            await name.channel.send(summary.content)
+            await summary.channel.send("Now type the date and time of your event")
+            details.append(summary.content)
+            time = await bot.wait_for("message", check = lambda message: message.author == text.author and message.guild == None, timeout=30.0)
+            if time.content.lower() == "event" or name.content.lower() == "cancel":
+                return
+            details.append(time.content)
+            await time.channel.send("Name of event: " + str(details[0]))
+            await time.channel.send("Summary of event: " + str(details[1]))
+            await time.channel.send("Time: " + str(details[2]))
+            await time.channel.send("If these details are correct, send \"send event\" to send the event, else type \"event\" to restart the process or \"cancel\" to cancel")
+            event = await bot.wait_for("message", check = lambda message: message.author == text.author and message.guild == None, timeout=30.0)
+            if event.content.lower() == "event" or name.content.lower() == "cancel":
+                return
+            else:
+                if event.content.lower() == "send event":
+                    announcement = bot.get_channel(723788723380289537)
+                    embed = discord.Embed(title=details[0], colour=random.randint(0,0xffffff))
+                    await event.add_reaction("👍")
+                    embed.add_field(name="Summary", value=details[1], inline=False)
+                    embed.add_field(name="Time", value=details[2], inline=False)
+                    embed.set_author(name=event.author.display_name, icon_url=event.author.avatar_url)
+                    embed.set_footer(text="React with \U0001F44D to express interest")
+                    announce = await announcement.send(embed=embed)
+                    await announcement.send("@everyone")
+                    await announce.add_reaction("👍")
+                else:
+                    await event.channel.send("Plz try again")
         except asyncio.TimeoutError:
             await text.channel.send("Sorry you took too long")
     if text.guild != None:
@@ -239,11 +273,15 @@ async def on_message(text):
                 await text.add_reaction(":poggers:806108825018695681")
                 await asyncio.sleep(1)
                 await text.channel.send("Poggers")
-            if "fuck" in text.content.lower():
-                await text.add_reaction("\U0001F1EB")
-                await text.add_reaction("\U0001F1FA")
-                await text.add_reaction("\U0001F1E8")
-                await text.add_reaction("\U0001F1F0")
+                return
+            elif "fuck" in text.content.lower():
+                await text.add_reaction("🇫")
+                await text.add_reaction("🇺")
+                await text.add_reaction("🇨")
+                await text.add_reaction("🇰")
+                if "fucker" in text.content.lower():
+                    await text.add_reaction("🇪")
+                    await text.add_reaction("🇷")
 
             await bot.process_commands(text)
 

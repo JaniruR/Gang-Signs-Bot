@@ -5,3 +5,4 @@ ree: Sends a ree with the amount of e's you specify and then deletes your comman
 timer: Enter a number and a timer for that amount of seconds will be initiated
 help: Bruh its just help, are you actually that stupid?
 speak: If you are in a voice channel, the bot will join your voice channel, say what you tell it to say and then leave. Do note that rawr xd from this command is different to rawr xd from rawr_xd
+twenty_one: You take it in turns with the bot to add 1, 2 or 3 to a running total. If you get 21 or more, you lose. 
