@@ -90,15 +90,15 @@ async def rawr_xd(ctx):
         await asyncio.sleep(float(get_length(filepath + "/rawr_xd.mp3")) + 0.00001) #waits for the mp3 file to finish
         await vc.disconnect()
     else:
-        await ctx.message.add_reaction("😆") #laughing emoji
+        await ctx.message.add_reaction("😆")
         await ctx.send("Join a voice channel and try again")
         await asyncio.sleep(0.1)
         await ctx.message.add_reaction(":emoji_3:805337017168297986") #red r
-        await ctx.message.add_reaction("🇦") #a
-        await ctx.message.add_reaction("🇼") #w
-        await ctx.message.add_reaction("🇷") #r
-        await ctx.message.add_reaction("🇽") #x
-        await ctx.message.add_reaction("🇩") #d
+        await ctx.message.add_reaction("🇦")
+        await ctx.message.add_reaction("🇼")
+        await ctx.message.add_reaction("🇷")
+        await ctx.message.add_reaction("🇽")
+        await ctx.message.add_reaction("🇩")
 
 @bot.command() #sends a ree
 async def ree(ctx, amount):
@@ -197,9 +197,6 @@ async def twenty_one(ctx):
         if a > 20:
             await ctx.send("Oh, I lost")
 
-@bot.command()
-async def test(ctx):
-    await ctx.send("🟧")
 @bot.event #purely for console update
 async def on_ready():
     print('Logged in as {0.user}'.format(bot))
@@ -265,6 +262,7 @@ async def on_message(text):
                     await event.channel.send("Plz try again")
         except asyncio.TimeoutError:
             await text.channel.send("Sorry you took too long")
+            
     if text.guild != None:
         if not text.author.bot:
             if random.randint(1,1000) == 1:
