@@ -189,9 +189,11 @@ async def twenty_one(ctx):
             a += 3
         else:
             await ctx.send("I can't deal with this bullshit, I'm out")
+            return
+        await score.edit(content=a)
         if a > 20:
             await ctx.send("Well done, you lost")
-        await score.edit(content=a)
+            return
         a += random.choice([1,2,3])
         await score.edit(content=a)
         if a > 20:
@@ -262,7 +264,7 @@ async def on_message(text):
                     await event.channel.send("Plz try again")
         except asyncio.TimeoutError:
             await text.channel.send("Sorry you took too long")
-            
+
     if text.guild != None:
         if not text.author.bot:
             if random.randint(1,1000) == 1:
