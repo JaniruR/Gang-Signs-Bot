@@ -267,7 +267,7 @@ async def on_message(text):
 
     if text.guild != None:
         if not text.author.bot:
-            if random.randint(1,1000) == 1:
+            if random.randint(1,8196) == 1:
                 await text.reply("Nice you got a shiny message")
             if "bobby" in text.content.lower() or "poggers" in text.content.lower() or "pog" in text.content.lower():
                 await text.add_reaction(":poggers:806108825018695681")
